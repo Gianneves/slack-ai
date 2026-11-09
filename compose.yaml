@@ -1,0 +1,52 @@
+name: fullcycle-slack-ia
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+    command: sh -c "pnpm install --frozen-lockfile || (rm -rf node_modules && pnpm install --frozen-lockfile); tail -f /dev/null"
+    volumes:
+      - .:/home/node/app
+    ports:
+      - "3000:3000"
+
+  chat-api:
+    build:
+      context: .
+      dockerfile: apps/chat-api/Dockerfile.dev
+    command: sh -c "pnpm install --frozen-lockfile || (rm -rf node_modules && pnpm install --frozen-lockfile); tail -f /dev/null"
+    volumes:
+      - .:/home/node/app
+    ports:
+      - "3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  s3:
+    image: chrislusf/seaweedfs:4.52
+    command: mini
+    volumes:
+      - s3-data:/data
+    ports:
+      - "8333:8333"
+
+volumes:
+  postgres-data:
+  s3-data:

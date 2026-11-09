@@ -1,0 +1,6 @@
+FROM node:26-bookworm
+
+RUN npm install -g pnpm@11.9.0
+
+USER node
+WORKDIR /home/node/app/apps/chat-api

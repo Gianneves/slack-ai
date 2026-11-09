@@ -448,7 +448,7 @@ As demais variáveis estão a definir.
 
 ## 10. Ambiente de desenvolvimento
 
-Situação: `planejada` — nada desta seção existe ainda no repositório.
+Situação: `existe`
 
 Tudo roda em contêineres, pelo `compose.yaml` da raiz (projeto `fullcycle-slack-ia`). O que
 substitui cada serviço de produção segue o HLD, seção 9, "Implantação e ambientes".
@@ -469,12 +469,15 @@ Entram depois: o Redis, quando o primeiro uso dele for implementado, e os servi�
 - A imagem não tem dependências. O `CMD` roda `pnpm install --frozen-lockfile` e mantém o
   contêiner de pé; o app sobe na mão: `docker compose exec chat-api pnpm start:dev` e
   `docker compose exec web pnpm dev`. Se o install falha, o contêiner continua de pé e o erro
-  fica em `docker compose logs`.
+  fica em `docker compose logs`. Se o install aborta por pedir a remoção de um `node_modules`
+  de outro store (ex.: instalado pelo host), o `CMD` o apaga e tenta de novo uma vez.
 - O repositório inteiro é montado em `/home/node/app`, para o `file:../../packages/chat-events`
   resolver igual dentro e fora. O `node_modules` fica no disco do host, visível para o editor.
 - Os contêineres rodam como `node` (uid 1000), o mesmo usuário do host no WSL.
 - O store do pnpm fica em `.pnpm-store/` na raiz, ignorado pelo git e compartilhado pelos dois
-  apps. A versão do pnpm é a do `packageManager` de cada projeto, igual nos dois.
+  apps, com `storeDir: ../../.pnpm-store` no `pnpm-workspace.yaml` de cada projeto (o pnpm 11
+  lê as configurações desse arquivo). A versão do pnpm é a do `packageManager` de cada projeto,
+  igual nos dois.
 - Bindings nativos são compilados no contêiner: o Node do host precisa ser o mesmo major (26)
   para rodar ferramentas pelo host sobre o mesmo `node_modules`.
 
