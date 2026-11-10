@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    ".opencode/rules/nest-api-coding-standards.md",
+    ".opencode/rules/nest-api-controller.md",
+    ".opencode/rules/nest-api-errors.md",
+    ".opencode/rules/nest-api-testing.md",
+    ".opencode/rules/next-web-coding-standards.md"
+  ]
+}
