@@ -1,6 +1,6 @@
 # F01 — T02 — Componentes de UI da F01
 
-Status: a fazer
+Status: em andamento
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
