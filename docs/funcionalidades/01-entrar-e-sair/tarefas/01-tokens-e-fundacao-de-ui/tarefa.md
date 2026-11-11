@@ -1,6 +1,6 @@
 # F01 — T01 — Tokens e fundação de UI
 
-Status: a fazer
+Status: em andamento
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)

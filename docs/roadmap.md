@@ -42,8 +42,8 @@ Os status são os do `AGENTS.md`:
 | F18 | Reagir a mensagens | 2 | F05 | planejada | — | — |
 | F19 | Enviar e baixar arquivos na conversa | 2 | F05 | planejada | — | — |
 
-**Observação.** F01 tem o backend de login implementado na branch `feature/login`, o PRD aprovado
-e a spec em rascunho, mas ainda sem plano de tarefa. Por isso entra como "em andamento"; as demais
+**Observação.** F01 tem o backend de login implementado na branch `feature/login`, o PRD aprovado,
+a spec em rascunho e o plano da T01 aprovado. Por isso entra como "em andamento"; as demais
 começam em "planejada". A Fase 2 só começa quando a Fase 1 atingir as metas de qualidade: ≥ 98% na
 avaliação, 0 número errado entregue, p95 ≤ 5 s e ≤ US$ 0,01 por pedido
 ([product brief](product-brief.md)).
