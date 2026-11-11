@@ -9,7 +9,7 @@ Status: rascunho · HLD: [hld.md](hld.md)
 | Arquitetura, contêineres, integrações e motivos | [HLD](hld.md) |
 | Decisões com porquê | `docs/adr/`, com o índice na seção "Decisões" deste documento e do HLD |
 | Escopo e público | [Product brief](product-brief.md) |
-| Vocabulário | `GLOSSARY.md` na raiz (planejado) |
+| Vocabulário | [`GLOSSARY.md`](../GLOSSARY.md) na raiz |
 | Linguagem visual (cores, componentes, microtexto) | [Figma](https://www.figma.com/design/plW17JDOoRHydUJIIi2u87/slack) |
 | Contrato REST da API do chat | `apps/chat-api/openapi.json`, gerado pelo `@nestjs/swagger` (planejado) |
 | Contrato REST do Serviço de agentes | `apps/agents/openapi.json`, gerado pelo FastAPI (planejado) |
@@ -177,7 +177,7 @@ depois do commit (publicação direta ou tabela de saída) estão a definir.
   O `detail` é para pessoas e não traz detalhes internos.
 - O catálogo de códigos fica nos snapshots OpenAPI, como enum na resposta de erro de cada rota.
 - Na API do chat, o service e o guard lançam erro de domínio, e só o filter global o traduz em
-  resposta HTTP: `.claude/rules/nest-api-errors.md` (planejado). No BFF e no Serviço de agentes,
+  resposta HTTP: `.opencode/rules/nest-api-errors.md` (planejado). No BFF e no Serviço de agentes,
   quem traduz está a definir.
 - **Mensagem gravada, mas o Serviço de agentes não recebeu o pedido** (HLD 6.3): o BFF responde
   sucesso, com a mensagem gravada e um campo que diz que o agente não recebeu o pedido. A tela
