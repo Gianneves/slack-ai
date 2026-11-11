@@ -1,6 +1,6 @@
 # F01 — T02 — Componentes de UI da F01
 
-Status: a fazer
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -26,17 +26,17 @@ descritos no design system.
 
 ## Critérios de aceite
 
-- [ ] **CA1** · Cada componente segue os variants, tamanhos e estados do design system e do
+- [x] **CA1** · Cada componente segue os variants, tamanhos e estados do design system e do
       Figma.
-- [ ] **CA2** · Input e Field têm estado inválido por `aria-invalid`, borda `danger` e anel de
+- [x] **CA2** · Input e Field têm estado inválido por `aria-invalid`, borda `danger` e anel de
       erro.
-- [ ] **CA3** · Button tem `loading` com Spinner, texto mantido e controle desabilitado.
-- [ ] **CA4** · DropdownMenu funciona por teclado e tem item destacado como o design system
+- [x] **CA3** · Button tem `loading` com Spinner, texto mantido e controle desabilitado.
+- [x] **CA4** · DropdownMenu funciona por teclado e tem item destacado como o design system
       descreve.
-- [ ] **CA5** · Avatar usa as iniciais e as cores `avatar-1` a `avatar-6`; EmptyState tem o quadro
+- [x] **CA5** · Avatar usa as iniciais e as cores `avatar-1` a `avatar-6`; EmptyState tem o quadro
       de 48.
-- [ ] **CA6** · Nenhuma cor solta; tudo por token.
-- [ ] **CA7** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
+- [x] **CA6** · Nenhuma cor solta; tudo por token.
+- [x] **CA7** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
 
 ## Dependências
 
