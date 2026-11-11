@@ -98,9 +98,11 @@ não os repete.
 | --- | --- | --- |
 | `src/app/globals.css` | existe (esqueleto) | tokens semânticos, temas claro e escuro, tipografia, raios, elevação e movimento do design system |
 | `src/app/layout.tsx` | existe (esqueleto) | Lato, `lang="pt-BR"` e a base visual |
+| `src/app/(app)/layout.tsx` | planejada | layout autenticado, verificação da Sessão e porta de erro |
 | `src/app/page.tsx` | existe (esqueleto) | Home / Vazio |
 | `src/app/entrar/page.tsx` | planejada | tela de entrar |
 | `src/app/components/ui/` | planejada | Button, Input, Field, Spinner, Avatar, EmptyState, DropdownMenu |
+| `src/app/components/session/` | planejada | verificação cacheada e porta de erro de sessão, compartilhadas |
 | `src/app/components/auth/` | planejada | formulário de entrar |
 | `src/app/components/workspace-nav/` | planejada | Rail e Sidebar da Home |
 | `src/app/components/user/` | planejada | UserMenu com Sair |
@@ -109,8 +111,9 @@ não os repete.
 | `src/app/utils/` | planejada | `cn` e a validação de `?para` |
 | `src/config/env.ts` | planejada | schema zod das variáveis da web |
 | `src/proxy.ts` | planejada | conferência da existência do cookie (Next 16 chama o antigo middleware de proxy) |
-| `e2e/` e `playwright.config.ts` | planejada | testes de ponta a ponta, Chromium headless e axe |
+| `e2e/` e `playwright.config.ts` | planejada | testes de ponta a ponta, Chromium headless e axe, com a skill `playwright-cli` na escrita e na depuração |
 | `package.json` | existe | `zod`, `lucide-react`, `radix-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`, `@playwright/test` e `@axe-core/playwright` |
+| `AGENTS.md` | existe | comandos de e2e e o uso da skill `playwright-cli` |
 | `compose.yaml` (raiz) | existe | serviço `e2e` com `profile`, como o LLD, seção 10, planeja |
 
 `packages/chat-events` e `apps/agents` não são tocados pela F01.
@@ -282,9 +285,10 @@ As tarefas estão na ordem de dependência. Cada uma tem o `tarefa.md` em
 | [03 — Verificação e saída da Sessão na API](tarefas/03-verificacao-e-saida-da-sessao-na-api/tarefa.md) | `AuthGuard`, `unauthenticated`, `GET` e `DELETE /v1/sessions/current` | — |
 | [04 — Comando de contas e Sessões](tarefas/04-comando-de-contas-e-sessoes/tarefa.md) | CLI com criar Pessoa, revogar Sessões, redefinir a senha e limpar Sessões vencidas | 03 |
 | [05 — Cliente de Sessão no BFF](tarefas/05-cliente-de-sessao-no-bff/tarefa.md) | Serviço HTTP, Server Actions, cookie, proxy e `?para` | 03 |
-| [06 — Tela de entrar](tarefas/06-tela-de-entrar/tarefa.md) | `/entrar` com todos os estados e a porta de sessão | 01, 02, 05 |
-| [07 — Home e layout logado](tarefas/07-home-e-layout-logado/tarefa.md) | Layout que verifica a Sessão, Home / Vazio, menu da Pessoa e Sair | 01, 02, 05 |
-| [08 — Testes de ponta a ponta da web](tarefas/08-testes-ponta-a-ponta-da-web/tarefa.md) | Playwright com Chromium headless e axe, cobrindo a F01 | 04, 06, 07 |
+| [06 — Porta de sessão e layout autenticado](tarefas/06-porta-de-sessao-e-layout-autenticado/tarefa.md) | Verificação cacheada, limpeza do cookie no 401, porta de erro e layout autenticado | 02, 05 |
+| [07 — Tela de entrar](tarefas/07-tela-de-entrar/tarefa.md) | `/entrar` com todos os estados, usando a porta de sessão | 06 |
+| [08 — Home e menu da Pessoa](tarefas/08-home-e-menu-da-pessoa/tarefa.md) | Home / Vazio e menu da Pessoa com Sair, dentro do layout autenticado | 02, 06 |
+| [09 — Testes de ponta a ponta da web](tarefas/09-testes-ponta-a-ponta-da-web/tarefa.md) | Playwright com Chromium headless e axe, cobrindo a F01 | 04, 07, 08 |
 
 ## 8. Estratégia de teste
 
@@ -313,6 +317,11 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 - Playwright, só no Chromium em modo headless, com `@axe-core/playwright`, contra a web e a API
   reais (LLD, seção 1). É o único ponto de teste da web; não há teste de unidade na web nesta
   funcionalidade.
+- A escrita, a execução e a depuração seguem a skill `playwright-cli`. A suíte roda com
+  `npx playwright test` e `PLAYWRIGHT_HTML_OPEN=never`, sem abrir janela do navegador; um caso que
+  falha é depurado com `npx playwright test --debug=cli` em segundo plano e
+  `playwright-cli attach`, como manda a skill. O `playwright-cli` é o do `@playwright/test`
+  instalado no `web`, nunca uma instalação global (LLD, seção 10).
 - Casos: entrar e chegar à Home; credencial inválida mantém na tela com uma mensagem; bloqueio
   mostra o tempo que falta; `?para=` relativo volta à página pedida e `//outro` cai na Home;
   abrir `/entrar` com Sessão válida vai para a Home; recarregar, abrir outra aba e reabrir o
@@ -326,7 +335,7 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 
 ### Manual
 
-- `roteiro-manual.md` da tarefa 08: as operações da CLI, a porta de erro de sessão, a Sessão
+- `roteiro-manual.md` da tarefa 09: as operações da CLI, a porta de erro de sessão, a Sessão
   revogada com o chat aberto e a conferência visual com o Figma, nos temas claro e escuro.
 - A validação visual segue o `docs/design-system.md`, seção "Validação visual".
 
@@ -335,11 +344,11 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 | Risco | Impacto | Mitigação |
 | --- | --- | --- |
 | Nome do cookie divergente entre BFF e API | Toda Sessão é recusada, mesmo com login certo | Uma variável só, decisão da questão 1; teste de integração entre as duas pontas |
-| Apagar o cookie no 401 durante o render | Laço de redirecionamento ou cookie velho preso | Resolver a questão 2 antes da tarefa 05; teste de ponta a ponta |
+| Apagar o cookie no 401 durante o render | Laço de redirecionamento ou cookie velho preso | Resolver a questão 2 antes da tarefa 06; teste de ponta a ponta |
 | "Estado atual" do design system à frente do código | Tarefas 01 e 02 parecem prontas e não estão | Tratar as duas como trabalho novo; corrigir a tabela (questão 10) |
 | Verificação da Sessão no layout e na página | Duas renovações e duas idas à API por render | `cache()` do React por requisição (decisão 6) |
 | Snapshot OpenAPI inexistente | O contrato não tem dono no repositório | Questão 5; os testes de ponta a ponta da API fixam o comportamento atual |
-| Teste da web acoplado ao comando da API | Suíte lenta e frágil, ou impossível de semear | Decidir a questão 4 antes da tarefa 08 |
+| Teste da web acoplado ao comando da API | Suíte lenta e frágil, ou impossível de semear | Decidir a questão 4 antes da tarefa 09 |
 | `Secure=false` no local | Em produção, cookie viajaria sem TLS se a variável não for corrigida | `.env.example` com valores falsos e validação na subida |
 | Token no log do BFF | Vazamento de credencial | Ações e serviço não registram cabeçalhos, cookie nem corpo; conferência na tarefa 05 |
 | Bloqueio de e-mail por terceiro | Alguém pode bloquear o e-mail de outra Pessoa | Risco aceito na ADR 0023; janela e bloqueio curtos, sem extensão |
@@ -352,11 +361,11 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
       nos dois projetos? Trava as tarefas 03 e 05 e a integração entre elas.
 - [ ] **2. Porta do BFF para apagar o cookie no 401.** Server Components não alteram cookie. Criar
       uma rota no BFF, como `GET /api/session/clear?para=`, e registrá-la no índice de rotas do
-      LLD, ou autorizar uma ação no cliente? Trava as tarefas 05, 06 e 07.
+      LLD, ou autorizar uma ação no cliente? Trava as tarefas 06, 07 e 08.
 - [ ] **3. Granularidade da revogação pelo comando.** Revogar uma Sessão específica ou todas as
       Sessões de uma Pessoa? Trava a tarefa 04 e o roteiro manual.
 - [ ] **4. Como o Playwright cria e revoga Pessoas.** Rodar a operação do comando de contas dentro
-      do contêiner `e2e`, ou usar SQL e um hash pronto? Trava a tarefa 08.
+      do contêiner `e2e`, ou usar SQL e um hash pronto? Trava a tarefa 09.
 - [ ] **5. Dono do snapshot OpenAPI.** O LLD diz que o snapshot é o dono do contrato, mas ele não
       existe. A infraestrutura do `@nestjs/swagger` entra nesta funcionalidade ou numa tarefa de
       contrato separada? Trava o dono do contrato, não o código da F01.
@@ -369,7 +378,7 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
       válida no banco, ou manter a Sessão e mostrar erro? Trava a aceitação do caminho de falha do
       Sair.
 - [ ] **9. Microtexto dos estados.** O Figma é o dono do microtexto da tela de entrar, da Home, do
-      menu da Pessoa e das portas de Sessão. Confirmar os frames usados na tarefa 06 e 07. Trava
+      menu da Pessoa e das portas de Sessão. Confirmar os frames usados nas tarefas 07 e 08. Trava
       só a redação final.
 - [ ] **10. Correção da seção "Estado atual" do design system.** A tabela diz que os tokens, os
       componentes da F01 e as bibliotecas (Radix, CVA, Sonner) existem no código; o repositório

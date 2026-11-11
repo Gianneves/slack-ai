@@ -20,19 +20,24 @@ descritos no design system.
 - Em `src/app/components/ui/`, um arquivo por componente: `button.tsx`, `input.tsx`, `field.tsx`,
   `spinner.tsx`, `avatar.tsx`, `empty-state.tsx` e `dropdown-menu.tsx`.
 - Server Components por padrão; `"use client"` só no `dropdown-menu.tsx`, que embrulha o Radix.
-- Sem componentes de domínio (`user/`, `workspace-nav/`, `auth/`), que ficam nas tarefas 06 e 07.
+- Sem componentes de domínio: `session/` fica na tarefa 06, `auth/` na 07, e `user/` e
+  `workspace-nav/` na 08.
 - Microtexto de exemplo nos componentes não é o texto final da tela; o texto vem do Figma.
 
 ## Critérios de aceite
 
-- [ ] Cada componente segue os variants, tamanhos e estados do design system e do Figma.
-- [ ] Input e Field têm estado inválido por `aria-invalid`, borda `danger` e anel de erro.
-- [ ] Button tem `loading` com Spinner, texto mantido e controle desabilitado.
-- [ ] DropdownMenu funciona por teclado e tem item destacado como o design system descreve.
-- [ ] Avatar usa as iniciais e as cores `avatar-1` a `avatar-6`; EmptyState tem o quadro de 48.
-- [ ] Nenhuma cor solta; tudo por token.
-- [ ] `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
+- [ ] **CA1** · Cada componente segue os variants, tamanhos e estados do design system e do
+      Figma.
+- [ ] **CA2** · Input e Field têm estado inválido por `aria-invalid`, borda `danger` e anel de
+      erro.
+- [ ] **CA3** · Button tem `loading` com Spinner, texto mantido e controle desabilitado.
+- [ ] **CA4** · DropdownMenu funciona por teclado e tem item destacado como o design system
+      descreve.
+- [ ] **CA5** · Avatar usa as iniciais e as cores `avatar-1` a `avatar-6`; EmptyState tem o quadro
+      de 48.
+- [ ] **CA6** · Nenhuma cor solta; tudo por token.
+- [ ] **CA7** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
 
 ## Dependências
 
-Tarefa 01. As telas 06 e 07 dependem desta.
+Tarefa 01. As tarefas 06, 07 e 08 dependem desta.

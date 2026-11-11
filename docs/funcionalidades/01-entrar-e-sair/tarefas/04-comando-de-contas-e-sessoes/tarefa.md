@@ -13,6 +13,10 @@ Status: a fazer
 Entregar a via de operação que o produto usa fora da interface: criar Pessoas, revogar Sessões,
 redefinir a senha e limpar Sessões vencidas.
 
+## Decisões consumidas de outras tarefas
+
+- Os métodos do repository para apagar Sessões e trocar a senha vêm da tarefa 03.
+
 ## Escopo
 
 - Comando `pnpm accounts <operação>`, rodando no contêiner `chat-api`, sobre o banco do chat.
@@ -28,17 +32,18 @@ redefinir a senha e limpar Sessões vencidas.
 
 ## Critérios de aceite
 
-- [ ] `create-person` cria a Pessoa com e-mail normalizado e senha Argon2id, e a Pessoa entra pelo
-      `POST /v1/sessions`.
-- [ ] `revoke-sessions` faz a próxima requisição com a Sessão revogada receber 401.
-- [ ] `reset-password` troca a senha, e todas as Sessões abertas da Pessoa deixam de valer.
-- [ ] `purge-expired-sessions` apaga só as Sessões vencidas.
-- [ ] A senha não aparece nos argumentos, no log nem em arquivo do repositório.
-- [ ] `pnpm lint`, `pnpm exec tsc --noEmit`, `pnpm test`, `pnpm test:int`, `pnpm test:e2e` e
-      `pnpm build` passam.
-- [ ] Nenhuma migração nova.
+- [ ] **CA1** · `create-person` cria a Pessoa com e-mail normalizado e senha Argon2id, e a Pessoa
+      entra pelo `POST /v1/sessions`.
+- [ ] **CA2** · `revoke-sessions` faz a próxima requisição com a Sessão revogada receber 401.
+- [ ] **CA3** · `reset-password` troca a senha, e todas as Sessões abertas da Pessoa deixam de
+      valer.
+- [ ] **CA4** · `purge-expired-sessions` apaga só as Sessões vencidas.
+- [ ] **CA5** · A senha não aparece nos argumentos, no log nem em arquivo do repositório.
+- [ ] **CA6** · `pnpm lint`, `pnpm exec tsc --noEmit`, `pnpm test`, `pnpm test:int`,
+      `pnpm test:e2e` e `pnpm build` passam.
+- [ ] **CA7** · Nenhuma migração nova.
 
 ## Dependências
 
-Tarefa 03, pelos métodos do repository. A tarefa 08 usa as operações para semear e revogar nos
+Tarefa 03, pelos métodos do repository. A tarefa 09 usa as operações para semear e revogar nos
 testes da web.

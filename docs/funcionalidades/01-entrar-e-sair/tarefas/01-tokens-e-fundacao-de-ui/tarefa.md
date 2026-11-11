@@ -24,13 +24,15 @@ tipografia e estados de foco já definidos.
 
 ## Critérios de aceite
 
-- [ ] O `globals.css` tem os mesmos nomes e valores da seção "Cores semânticas", "Tipografia",
-      "Raios", "Elevação", "Tamanhos do shell" e "Movimento" do design system.
-- [ ] Não há hex, `rgb()` nem cor da paleta padrão do Tailwind fora dos valores dos tokens.
-- [ ] O tema escuro funciona com `data-theme="dark"` no `<html>`, conferido no navegador.
-- [ ] O foco global é visível por teclado.
-- [ ] `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam no contêiner `web`.
+- [ ] **CA1** · O `globals.css` tem os mesmos nomes e valores da seção "Cores semânticas",
+      "Tipografia", "Raios", "Elevação", "Tamanhos do shell" e "Movimento" do design system.
+- [ ] **CA2** · Não há hex, `rgb()` nem cor da paleta padrão do Tailwind fora dos valores dos
+      tokens.
+- [ ] **CA3** · O tema escuro funciona com `data-theme="dark"` no `<html>`, conferido no
+      navegador.
+- [ ] **CA4** · O foco global é visível por teclado.
+- [ ] **CA5** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam no contêiner `web`.
 
 ## Dependências
 
-Nenhuma. É a base das tarefas 02, 06 e 07.
+Nenhuma. É a base das tarefas 02, 07 e 08.
