@@ -98,7 +98,7 @@ A hierarquia é funcionalidade → tarefa, e cada funcionalidade tem dois docume
 
 - **Funcionalidade:** uma entrega demonstrável no produto, descrita só pelo que a pessoa consegue fazer, sem detalhes técnicos. Não é a Fase do `docs/product-brief.md`, que é uma fase do produto (MVP, operar como produto). O número da funcionalidade é global, sequencial e não muda depois de atribuído. Nos documentos de planejamento, "funcionalidade" é sempre este termo; para o sentido comum da palavra, use outra (recurso, comportamento).
 - **PRD:** os requisitos de produto de uma funcionalidade (problema, fluxos, histórias, critérios de aceite, fora de escopo), feito pela skill `/prd`. Aponta para o `docs/product-brief.md`, que cobre o produto inteiro, em vez de repetir métricas e requisitos não funcionais.
-- **Spec:** como a funcionalidade será construída (decisões de implementação e de teste), feita pela skill `/spec`. Segue o HLD, o LLD e as ADRs, apontando para eles.
+- **Spec:** como a funcionalidade será construída (decisões de implementação e de teste), feita pela skill `/to-spec`. Segue o HLD, o LLD e as ADRs, apontando para eles.
 - **Tarefa:** uma parte entregável de uma funcionalidade, a partir da spec. É nas tarefas que entra o trabalho técnico. Antes do código, cada tarefa ganha um **plano**, feito pela skill `/plan-task`, que é aprovado e commitado sozinho, no **commit de plano**. Depois disso o plano fica congelado, como registro do que foi aprovado: só o usuário o descongela, e uma decisão dele que se mostrar errada é corrigida na spec, no LLD ou numa tarefa nova. Fora da pasta da funcionalidade, a tarefa é identificada como `F<NN>-T<NN>`, como `F01-T02`.
 
 **Estrutura de pastas**
