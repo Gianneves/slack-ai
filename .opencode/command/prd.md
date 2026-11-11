@@ -1,15 +1,15 @@
 ---
-description: Cria ou revisa o PRD de uma funcionalidade em docs/funcionalidades
+description: Cria ou revisa o PRD de uma funcionalidade em docs/funcionalidades, com o status no roadmap
 ---
 
-Sua tarefa é criar ou revisar o PRD (Product Requirements Document) de uma funcionalidade do
-Full Cycle Chat.
+Sua tarefa é criar ou revisar o PRD (Product Requirements Document) de uma funcionalidade do Full
+Cycle Chat.
 
 ## Fonte
 
 A funcionalidade é indicada em $ARGUMENTS, pelo número (`F01`), pelo título ou pela pasta
-(`docs/funcionalidades/01-entrar-e-sair`). Se $ARGUMENTS estiver vazio, leia o
-[roadmap](../../docs/roadmap.md) e pergunte qual funcionalidade será detalhada.
+(`docs/funcionalidades/01-entrar-e-sair`). Se $ARGUMENTS estiver vazio, leia `docs/roadmap.md` e
+pergunte qual funcionalidade será detalhada.
 
 Antes de escrever, leia:
 
