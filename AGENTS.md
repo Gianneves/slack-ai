@@ -80,9 +80,13 @@ Na conexão entre serviços (banco, storage), seja em variável de ambiente, arq
 
 ## Design e Figma
 
-O Figma é a ferramenta de design do projeto, acessada pelo servidor MCP do plugin `figma`.
+O design do projeto está disponível no Figma:
+- **Link de Referência:** https://www.figma.com/design/plW17JDOoRHydUJIIi2u87/slack
 
-**Arquivo do Figma:** <https://www.figma.com/design/plW17JDOoRHydUJIIi2u87/slack>
+### Instruções para o Agente:
+1. **Contexto de UI/UX:** Utilize os arquivos localizados na pasta `./docs/design` (ou `DESIGN_TOKENS.md`) como a fonte primária de especificações visuais (cores, espaçamentos, tipografia).
+2. **Imagens/Prints:** Ao solicitar auxílio em telas específicas, consulte as capturas de tela fornecidas no contexto da conversa.
+3. **Construção de Componentes:** Utilize as ferramentas do Stitch MCP para gerar e inspecionar a estrutura de componentes frontend com base nessas especificações.
 
 **Sempre que a tarefa envolver design ou interface, leia antes o `docs/design-system.md`**, seja para desenhar no Figma, seja para implementar uma tela ou um componente no código. Ele define os tokens, os componentes e o fluxo de trabalho com o Figma (sincronia, passos do Figma para o código, assets e validação visual), e as regras dele são obrigatórias.
 
@@ -94,7 +98,7 @@ A hierarquia é funcionalidade → tarefa, e cada funcionalidade tem dois docume
 
 - **Funcionalidade:** uma entrega demonstrável no produto, descrita só pelo que a pessoa consegue fazer, sem detalhes técnicos. Não é a Fase do `docs/product-brief.md`, que é uma fase do produto (MVP, operar como produto). O número da funcionalidade é global, sequencial e não muda depois de atribuído. Nos documentos de planejamento, "funcionalidade" é sempre este termo; para o sentido comum da palavra, use outra (recurso, comportamento).
 - **PRD:** os requisitos de produto de uma funcionalidade (problema, fluxos, histórias, critérios de aceite, fora de escopo), feito pela skill `/prd`. Aponta para o `docs/product-brief.md`, que cobre o produto inteiro, em vez de repetir métricas e requisitos não funcionais.
-- **Spec:** como a funcionalidade será construída (decisões de implementação e de teste). Segue o HLD, o LLD e as ADRs, apontando para eles.
+- **Spec:** como a funcionalidade será construída (decisões de implementação e de teste), feita pela skill `/spec`. Segue o HLD, o LLD e as ADRs, apontando para eles.
 - **Tarefa:** uma parte entregável de uma funcionalidade, a partir da spec. É nas tarefas que entra o trabalho técnico. Antes do código, cada tarefa ganha um **plano**, feito pela skill `/plan-task`, que é aprovado e commitado sozinho, no **commit de plano**. Depois disso o plano fica congelado, como registro do que foi aprovado: só o usuário o descongela, e uma decisão dele que se mostrar errada é corrigida na spec, no LLD ou numa tarefa nova. Fora da pasta da funcionalidade, a tarefa é identificada como `F<NN>-T<NN>`, como `F01-T02`.
 
 **Estrutura de pastas**
