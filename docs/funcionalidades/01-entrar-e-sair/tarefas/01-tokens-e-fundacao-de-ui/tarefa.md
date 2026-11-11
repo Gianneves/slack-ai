@@ -1,6 +1,6 @@
 # F01 — T01 — Tokens e fundação de UI
 
-Status: em andamento
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -24,14 +24,14 @@ tipografia e estados de foco já definidos.
 
 ## Critérios de aceite
 
-- [ ] **CA1** · O `globals.css` tem os mesmos nomes e valores da seção "Cores semânticas",
+- [x] **CA1** · O `globals.css` tem os mesmos nomes e valores da seção "Cores semânticas",
       "Tipografia", "Raios", "Elevação", "Tamanhos do shell" e "Movimento" do design system.
-- [ ] **CA2** · Não há hex, `rgb()` nem cor da paleta padrão do Tailwind fora dos valores dos
+- [x] **CA2** · Não há hex, `rgb()` nem cor da paleta padrão do Tailwind fora dos valores dos
       tokens.
-- [ ] **CA3** · O tema escuro funciona com `data-theme="dark"` no `<html>`, conferido no
+- [x] **CA3** · O tema escuro funciona com `data-theme="dark"` no `<html>`, conferido no
       navegador.
-- [ ] **CA4** · O foco global é visível por teclado.
-- [ ] **CA5** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam no contêiner `web`.
+- [x] **CA4** · O foco global é visível por teclado.
+- [x] **CA5** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam no contêiner `web`.
 
 ## Dependências
 
