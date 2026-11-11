@@ -1,80 +1,73 @@
 ---
-description: Cria o plano de uma tarefa antes do código e o commita sozinho no commit de plano
+description: "Planeja uma tarefa para aprovação antes de implementá-la: o contrato que ela cria e como cada critério de aceite será provado. Use ao começar uma tarefa, antes de escrever código de produção."
 ---
 
-Sua tarefa é criar o plano de uma tarefa do Full Cycle Chat, antes de qualquer código, e commitá-lo
-sozinho no commit de plano depois da aprovação do usuário. Esta skill não implementa a tarefa.
+Planeje uma tarefa, indicada pelo caminho do arquivo ou pelo par funcionalidade e tarefa (como
+`F01-T02`). O plano existe para uma pessoa aprovar, antes de existir código, o contrato que a
+tarefa cria e como cada critério será provado. Por isso você para no fim sem commitar.
 
-## Fonte
+Os moldes estão em `.opencode/plan-task/formatos/`: o plano e as regras dos critérios (`plano.md`)
+e o contrato de rotas, eventos e tabelas (`contrato.md`).
 
-A tarefa é indicada em $ARGUMENTS, por `F<NN>-T<NN>` (`F01-T02`), pelo caminho da pasta ou pelo
-título. Se $ARGUMENTS estiver vazio, leia `docs/roadmap.md` e a pasta da funcionalidade e pergunte
-qual tarefa será planejada.
+## Passos
 
-Antes de escrever, leia:
+1. **Contexto.** Ache a tarefa e a pasta da funcionalidade dela. Leia a tarefa, a `spec.md`, o
+   `prd.md`, o `GLOSSARY.md`, as seções do HLD e do LLD e as ADRs que a tarefa toca, o
+   `docs/design-system.md` se a tarefa tocar interface, o `AGENTS.md` da raiz e o do projeto
+   afetado, as rules de `.opencode/rules/` que valem para os arquivos da tarefa, e o código que ela
+   vai mudar. Pare, dizendo o motivo, quando:
 
-- `docs/funcionalidades/<num-funcionalidade>-<titulo>/spec.md`, que é a fonte das decisões de
-  implementação e de teste da funcionalidade;
-- `docs/funcionalidades/<num-funcionalidade>-<titulo>/tarefas/<NN>-<titulo>/tarefa.md`, que é a
-  fonte do escopo da tarefa;
-- o `docs/hld.md`, o `docs/lld.md` e as ADRs em `docs/adr/` citadas pela spec e pela tarefa;
-- o `docs/design-system.md`, se a tarefa tocar interface;
-- o `AGENTS.md` da raiz e o `AGENTS.md` do projeto afetado, para comandos e práticas;
-- as rules de `.opencode/rules/` que valem para os arquivos da tarefa.
+   - a tarefa não existir;
+   - uma tarefa de "Bloqueada por" ainda não está concluída;
+   - a funcionalidade não tem `spec.md`, porque o plano executa decisões da spec e não as toma;
+   - o plano desta tarefa já está em commit (`git log --oneline -- <plano>` mostra algum commit):
+     ele está congelado, e só o usuário o descongela.
 
-Se a spec ou a tarefa não existir, pare e avise o usuário: o plano nasce da spec.
+   Se o plano existe mas não está em commit, é uma rodada anterior que não foi aprovada: revise e
+   corrija esse plano em vez de começar outro.
 
-## Regras
+   Se o plano exigir mudança no `docs/hld.md` ou no `docs/lld.md`, pare antes de planejar e use a
+   skill `hld` ou `lld` no modo atualizar. O plano aponta para o resultado, não repete a decisão.
 
-- **Nada de código nesta skill.** O plano descreve o que será feito; a implementação vem depois, na
-  tarefa.
-- **O plano é congelado no commit.** Depois do commit de plano, o `plano.md` não muda: só o usuário
-  o descongela, e uma decisão errada é corrigida na spec, no LLD ou numa tarefa nova.
-- **Um commit só para o plano.** O commit de plano leva o `plano.md` e as mudanças de status
-  descritas abaixo, e nada mais.
-- **Aprovação antes do commit.** Apresente o plano e espere o usuário aprovar. Só então edite os
-  arquivos e faça o commit.
-- **Nunca commite na `main`.** Use uma branch `feature/*`, `bugfix/*`, `hotfix/*` ou `docs/*`,
-  criada a partir da `main`, conforme o `AGENTS.md` da raiz.
-- Se o plano exigir mudança no `docs/hld.md` ou no `docs/lld.md`, pare antes de planejar e use a
-  skill `hld` ou `lld` no modo atualizar. O plano aponta para o resultado, não repete a decisão.
+2. **Critérios.** Todo critério da tarefa tem um ID `CA<n>`: dê ID aos que não têm, continuando a
+   numeração, e não renumere os que já têm. Não mude o texto de um critério por conta própria.
+   Quando ele ficou desatualizado em relação aos documentos (descreve uma regra que um documento já
+   mudou), proponha a correção como decisão em aberto e só altere a tarefa depois da aprovação.
+   Para cada critério, escreva no plano a marca, o cenário e o teste previsto, como diz
+   `.opencode/plan-task/formatos/plano.md`.
+
+3. **Contrato.** Escreva no plano cada rota, evento e tabela que a tarefa cria, muda ou remove, no
+   formato de `.opencode/plan-task/formatos/contrato.md`. Não edite à mão os donos do contrato que
+   o LLD lista em "Onde mora cada fato": eles são gerados a partir do código, e a primeira geração
+   apagaria a edição. Depois, escreva a seção "Verificação do contrato", dizendo que critério prova
+   cada item.
+
+4. **Documentos.** Quando a tarefa muda algo que o LLD ou o HLD registram, a atualização entra no
+   commit de plano, para os documentos descreverem a regra nova antes de o código existir. Liste no
+   plano, em "Documentos atualizados", o que mudou em cada documento.
+
+5. **Parar.** Não faça commit.
+
+   1. Mude o Status da tarefa para "em andamento".
+   2. No chat, mostre só o caminho do plano e as decisões em aberto. O resto está no arquivo, e
+      repetir no chat cria duas versões para revisar.
+   3. Espere a aprovação. A revisão chega no chat, citando um `CA<n>` ou uma seção. Depois de cada
+      mudança pedida, corrija o plano e mostre de novo o que ainda está em aberto.
+
+6. **Commit de plano.** Só depois da aprovação, e sem nenhuma decisão em aberto no plano. Confira
+   com `git status --short` que entram só o plano, a tarefa, o roadmap quando for o primeiro
+   commit de plano da funcionalidade, e os documentos atualizados. Faça o commit em uma branch de
+   trabalho, nunca na `main`, com a mensagem
+   `docs: planeja <o que a tarefa entrega> (F<NN>-T<NN>)`. Se for o primeiro commit de plano de uma
+   tarefa da funcionalidade, mude o status da funcionalidade no `docs/roadmap.md` para "em
+   andamento". Não conclua a funcionalidade nem a tarefa: "concluída" só no PR que entrega. As
+   decisões e os arquivos já estão no plano, e a mensagem não os repete.
+
+## Regras de qualidade
+
+- Nada de código de produção nesta skill. O plano descreve o que será feito; a implementação vem
+  depois.
+- O plano é congelado no commit de plano. Depois dele, o `plano.md` não muda: só o usuário o
+  descongela, e uma decisão errada é corrigida na spec, no LLD ou numa tarefa nova.
 - Não invente detalhe de biblioteca, rota ou valor que o LLD e as ADRs não sustentam. Na dúvida,
-  consulte o context7 e registre como questão em aberto no plano.
-
-## Estrutura do plano
-
-Escreva em português do Brasil, em
-`docs/funcionalidades/<num-funcionalidade>-<titulo>/tarefas/<NN>-<titulo>/plano.md`, com esta
-estrutura:
-
-1. **Cabeçalho** — título, `F<NN>-T<NN>`, links para a tarefa e a spec e a data do plano.
-2. **Objetivo** — o que a tarefa entrega, em uma ou duas frases.
-3. **Escopo** — o que entra e o que fica de fora desta tarefa.
-4. **Decisões de implementação** — o que a tarefa decide, apontando para a seção do LLD, da spec ou
-   da ADR; o que já está decidido não é reaberto.
-5. **Passos** — em ordem, cada passo com os arquivos que toca, o que muda e como verificar que
-   ficou certo. Passos pequenos e verificáveis.
-6. **Testes** — os testes a criar ou ajustar, pelo tipo (unidade, integração, ponta a ponta), com o
-   comportamento que cada um prova.
-7. **Verificação** — os comandos de lint, typecheck e teste, executados nos contêineres do Docker
-   Compose, e o roteiro manual quando a tarefa tiver interface.
-8. **Riscos e rollback** — o que pode dar errado e como desfazer.
-9. **Questões em aberto** — checklist `- [ ]`, uma por decisão que o plano não consegue fechar.
-
-## Status e commit de plano
-
-Depois da aprovação do usuário, antes de commitar:
-
-- mude o `Status` do `tarefa.md` para "em andamento";
-- se for o primeiro commit de plano de uma tarefa da funcionalidade, mude o status da
-  funcionalidade no `docs/roadmap.md` para "em andamento";
-- não conclua a funcionalidade nem a tarefa: "concluída" só no PR que entrega.
-
-Faça o commit só com esses arquivos e com o `plano.md`, porque os demais registros da tarefa são
-escritos durante a implementação e entram no PR da tarefa. Use uma mensagem curta e descritiva, no
-estilo do repositório, como `Planeja a tarefa F01-T02 <título>`.
-
-## Entrega
-
-Ao terminar, resuma: o que o plano cobre, quais arquivos serão tocados, como será verificado, o que
-ficou em aberto e o hash do commit de plano.
+  consulte o context7 e registre como decisão em aberto no plano.
