@@ -22,7 +22,7 @@ Os status são os do `AGENTS.md`:
 
 | Func. | O que a pessoa consegue ao final | Fase | Depende de | Status | PRD | Spec |
 | --- | --- | --- | --- | --- | --- | --- |
-| F01 | Entrar com e-mail e senha criados pela empresa, manter a sessão no navegador e sair; a sessão revogada deixa de valer | 1 | — | em andamento | — | — |
+| F01 | Entrar com e-mail e senha criados pela empresa, manter a sessão no navegador e sair; a sessão revogada deixa de valer | 1 | — | em andamento | [PRD](funcionalidades/01-entrar-e-sair/prd.md) | — |
 | F02 | Editar o próprio nome, cargo, telefone, status e presença, e escolher o tema claro ou escuro | 1 | F01 | planejada | — | — |
 | F03 | Conversar nos canais públicos do workspace e nos privados; criar um canal e convidar pessoas para um privado, que só quem foi convidado vê e usa | 1 | F01 | planejada | — | — |
 | F04 | Buscar uma pessoa por nome ou @usuário, abrir uma conversa 1:1 com ela e ver o perfil de qualquer pessoa | 1 | F01 | planejada | — | — |
@@ -42,10 +42,10 @@ Os status são os do `AGENTS.md`:
 | F18 | Reagir a mensagens | 2 | F05 | planejada | — | — |
 | F19 | Enviar e baixar arquivos na conversa | 2 | F05 | planejada | — | — |
 
-**Observação.** F01 tem o backend de login implementado na branch `feature/login`, sem PRD, spec
-ou plano de tarefa. Por isso entra como "em andamento"; as demais começam em "planejada". A Fase 2
-só começa quando a Fase 1 atingir as metas de qualidade: ≥ 98% na avaliação, 0 número errado
-entregue, p95 ≤ 5 s e ≤ US$ 0,01 por pedido ([product brief](product-brief.md)).
+**Observação.** F01 tem o backend de login implementado na branch `feature/login` e o PRD aprovado,
+mas ainda sem spec ou plano de tarefa. Por isso entra como "em andamento"; as demais começam em
+"planejada". A Fase 2 só começa quando a Fase 1 atingir as metas de qualidade: ≥ 98% na avaliação,
+0 número errado entregue, p95 ≤ 5 s e ≤ US$ 0,01 por pedido ([product brief](product-brief.md)).
 
 ## Mapa de dependências
 
