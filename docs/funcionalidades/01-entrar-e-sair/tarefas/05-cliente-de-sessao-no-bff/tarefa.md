@@ -1,6 +1,6 @@
 # F01 — T05 — Cliente de Sessão no BFF
 
-Status: em andamento
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -39,15 +39,15 @@ cookie.
 
 ## Critérios de aceite
 
-- [ ] **CA1** · Entrar grava o cookie com todos os atributos do LLD, seção 3, e redireciona para o
+- [x] **CA1** · Entrar grava o cookie com todos os atributos do LLD, seção 3, e redireciona para o
       `para` válido ou para a Home.
-- [ ] **CA2** · Sair chama a API, apaga o cookie e leva a `/entrar`; as outras Sessões continuam
+- [x] **CA2** · Sair chama a API, apaga o cookie e leva a `/entrar`; as outras Sessões continuam
       válidas.
-- [ ] **CA3** · O `?para=` inválido ou `//outro` cai na Home; a validação é refeita no servidor.
-- [ ] **CA4** · A verificação distingue 200, 401 e falha de rede, 5xx ou tempo esgotado.
-- [ ] **CA5** · O proxy não faz chamada à API e protege a área logada.
-- [ ] **CA6** · O token não vai para log, nem para o navegador fora do cookie httpOnly.
-- [ ] **CA7** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
+- [x] **CA3** · O `?para=` inválido ou `//outro` cai na Home; a validação é refeita no servidor.
+- [x] **CA4** · A verificação distingue 200, 401 e falha de rede, 5xx ou tempo esgotado.
+- [x] **CA5** · O proxy não faz chamada à API e protege a área logada.
+- [x] **CA6** · O token não vai para log, nem para o navegador fora do cookie httpOnly.
+- [x] **CA7** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
 
 ## Dependências
 
