@@ -1,6 +1,6 @@
 # F01 — T05 — Cliente de Sessão no BFF
 
-Status: a fazer
+Status: em andamento
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)

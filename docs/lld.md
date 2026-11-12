@@ -178,8 +178,9 @@ depois do commit (publicação direta ou tabela de saída) estão a definir.
   O `detail` é para pessoas e não traz detalhes internos.
 - O catálogo de códigos fica nos snapshots OpenAPI, como enum na resposta de erro de cada rota.
 - Na API do chat, o service e o guard lançam erro de domínio, e só o filter global o traduz em
-  resposta HTTP: `.opencode/rules/nest-api-errors.md` (planejado). No BFF e no Serviço de agentes,
-  quem traduz está a definir.
+  resposta HTTP: `.opencode/rules/nest-api-errors.md` (planejado). No BFF, as Server Actions de
+  Sessão traduzem os erros da API em um resultado discriminado para a tela; a tradução de erro do
+  BFF em geral e a do Serviço de agentes estão a definir.
 - **Mensagem gravada, mas o Serviço de agentes não recebeu o pedido** (HLD 6.3): o BFF responde
   sucesso, com a mensagem gravada e um campo que diz que o agente não recebeu o pedido. A tela
   mostra a mensagem enviada e um aviso de erro do agente ao lado.
@@ -313,7 +314,9 @@ Situação: `existe` para entrar, verificar, sair e para as operações do coman
 
 **Sair e revogar**
 
-- Sair apaga a Sessão apresentada. As outras Sessões da mesma Pessoa continuam valendo.
+- Sair apaga a Sessão apresentada. As outras Sessões da mesma Pessoa continuam valendo. O BFF apaga
+  o cookie e leva a "Entrar" mesmo quando a API está indisponível; a Sessão no banco continua até
+  vencer ou ser revogada.
 - Revogar, pelo comando de contas, apaga todas as Sessões da Pessoa identificada pelo e-mail
   normalizado; a próxima requisição com qualquer uma delas recebe `unauthenticated`. Redefinir a
   senha revoga todas as Sessões da Pessoa.
@@ -423,6 +426,7 @@ atualiza esse cache direto, sem nova requisição.
 | Duração da Sessão | 30 dias sem uso (PRD da F01, história 3) | API do chat | Variável `SESSION_TTL_DAYS`, padrão 30 |
 | Intervalo de renovação da Sessão | 1 dia | API do chat | Constante |
 | Validade do cookie de sessão | 400 dias, o teto do Chrome | BFF | Constante |
+| Tempo limite da verificação da Sessão no BFF | 5 s | BFF | Constante |
 | Tentativas de login | 5 (PRD da F01, história 2) | API do chat | Constante |
 | Janela de tentativas de login | 15 min (PRD da F01, história 2) | API do chat | Constante |
 | Bloqueio do login | 15 min (PRD da F01, história 2) | API do chat | Constante |
