@@ -41,6 +41,9 @@ function parseArguments(argv: string[]): Operation | { error: string } {
     if (email === undefined || name === undefined || rest.length !== 2) {
       return { error: 'create-person exige e-mail e nome.' };
     }
+    if (email.trim().length === 0 || name.trim().length === 0) {
+      return { error: 'create-person exige e-mail e nome não vazios.' };
+    }
     return { name: operation, email, nameOfPerson: name };
   }
 
@@ -48,6 +51,9 @@ function parseArguments(argv: string[]): Operation | { error: string } {
     const [email] = rest;
     if (email === undefined || rest.length !== 1) {
       return { error: `${operation} exige um e-mail.` };
+    }
+    if (email.trim().length === 0) {
+      return { error: `${operation} exige um e-mail não vazio.` };
     }
     return { name: operation, email };
   }

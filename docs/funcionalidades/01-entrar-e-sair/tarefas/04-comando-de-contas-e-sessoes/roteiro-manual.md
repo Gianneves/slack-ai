@@ -63,7 +63,10 @@ Cada comando abaixo deve sair com código 2 e uma mensagem no `stderr`, sem alte
 docker compose -f compose.yaml exec chat-api pnpm accounts
 docker compose -f compose.yaml exec chat-api pnpm accounts operacao-inexistente
 docker compose -f compose.yaml exec chat-api pnpm accounts create-person so-email@empresa.com
+docker compose -f compose.yaml exec chat-api pnpm accounts create-person '' 'Pessoa Sem E-mail'
+docker compose -f compose.yaml exec chat-api pnpm accounts create-person pessoa@empresa.com ''
 docker compose -f compose.yaml exec chat-api pnpm accounts revoke-sessions
+docker compose -f compose.yaml exec chat-api pnpm accounts revoke-sessions ''
 docker compose -f compose.yaml exec chat-api pnpm accounts purge-expired-sessions extra
 ```
 
