@@ -10,6 +10,7 @@ const envSchema = Joi.object({
   DATABASE_URL: Joi.string().required(),
   PORT: Joi.number().integer().port().default(3000),
   SESSION_TTL_DAYS: Joi.number().integer().min(1),
+  SESSION_COOKIE_NAME: Joi.string().trim().min(1),
 }).unknown(true);
 
 @Module({

@@ -13,4 +13,10 @@ export class PeopleRepository extends Repository<Person> {
   findByEmail(email: string): Promise<Person | null> {
     return this.findOneBy({ email });
   }
+
+  // Pessoa da Sessão autenticada. Pessoa apagada fora do produto é resultado
+  // de negócio e devolve null.
+  findById(id: string): Promise<Person | null> {
+    return this.findOneBy({ id });
+  }
 }

@@ -1,7 +1,19 @@
 // O controller adapta o HTTP (.opencode/rules/nest-api-controller.md):
 // recebe a requisição, valida a entrada pelo DTO, chama o service e devolve
 // o resultado. Ele não lança erro e não injeta repository.
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from './auth.guard.js';
+import type { AuthenticatedRequest } from './auth.guard.js';
 import { LoginDto } from './login-dto.js';
 import { SessionsService } from './sessions.service.js';
 
@@ -11,6 +23,14 @@ export interface LoginResponse {
   expires_at: string;
   person: {
     id: string;
+    email: string;
+  };
+}
+
+export interface CurrentSessionResponse {
+  person: {
+    id: string;
+    name: string;
     email: string;
   };
 }
@@ -32,5 +52,21 @@ export class SessionsController {
       expires_at: result.expiresAt.toISOString(),
       person: result.person,
     };
+  }
+
+  // Verificar a Sessão apresentada: o guard já resolveu a Pessoa
+  // (LLD, "Interfaces"; "Estados e regras", seção 6.2).
+  @Get('current')
+  @UseGuards(AuthGuard)
+  current(@Req() request: AuthenticatedRequest): CurrentSessionResponse {
+    return { person: request.person };
+  }
+
+  // Sair da Sessão apresentada: o guard já resolveu a Sessão.
+  @Delete('current')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@Req() request: AuthenticatedRequest): Promise<void> {
+    await this.sessions.logout({ sessionId: request.session.id });
   }
 }
