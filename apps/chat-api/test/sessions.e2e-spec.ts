@@ -6,6 +6,9 @@ import type { App } from './types.js';
 import request from 'supertest';
 import { clearData, createPerson, uniqueEmail } from './db.js';
 import { createTestApp } from './create-test-app.js';
+import { AccountsService } from '../src/accounts/accounts.service.js';
+import { PeopleRepository } from '../src/people/people.repository.js';
+import { SessionsRepository } from '../src/sessions/sessions.repository.js';
 
 const SESSIONS_URL = '/v1/sessions';
 const WRONG_PASSWORD = 'senha-errada';
@@ -353,5 +356,74 @@ describe('GET /v1/sessions/current (e2e)', () => {
 
     const rows: Array<unknown> = await dataSource.query('SELECT 1 FROM sessions');
     expect(rows).toHaveLength(0);
+  });
+});
+
+const COMMAND_PASSWORD = 'senha-forte';
+
+async function createPersonByCommandOrFail(
+  accounts: AccountsService,
+  email: string,
+): Promise<{ id: string; email: string }> {
+  const created = await accounts.createPerson({
+    email,
+    name: 'Pessoa do Comando',
+    password: COMMAND_PASSWORD,
+  });
+  if ('error' in created) {
+    throw new Error(created.error);
+  }
+  return created;
+}
+
+describe('Sessões e o comando de contas (e2e)', () => {
+  let app: INestApplication<App>;
+  let dataSource: DataSource;
+  let accounts: AccountsService;
+
+  beforeEach(async () => {
+    app = await createTestApp();
+    dataSource = app.get<DataSource>(getDataSourceToken());
+    accounts = new AccountsService(
+      new PeopleRepository(dataSource),
+      new SessionsRepository(dataSource),
+    );
+    await clearData(dataSource);
+  });
+
+  afterEach(async () => {
+    await clearData(dataSource);
+    await app.close();
+  });
+
+  it('entra com a Pessoa criada pelo comando de contas', async () => {
+    const email = uniqueEmail('comando');
+
+    await createPersonByCommandOrFail(accounts, `  ${email.toUpperCase()}  `);
+
+    const response = await postLogin(app, email, COMMAND_PASSWORD).expect(201);
+
+    expect(response.body.person.email).toBe(email);
+  });
+
+  it('recusa com 401 a Sessão revogada pelo comando de contas', async () => {
+    const person = await createPersonByCommandOrFail(
+      accounts,
+      uniqueEmail('revogada'),
+    );
+    const response = await postLogin(
+      app,
+      person.email,
+      COMMAND_PASSWORD,
+    ).expect(201);
+
+    await accounts.revokeSessions({
+      email: `  ${person.email.toUpperCase()}  `,
+    });
+
+    const current = await getCurrent(app, sessionCookie(response.body.token));
+
+    expect(current.status).toBe(401);
+    expect(current.body.code).toBe('unauthenticated');
   });
 });

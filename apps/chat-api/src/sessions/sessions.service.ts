@@ -1,6 +1,7 @@
 // Camada de serviços (.opencode/rules/nest-api-coding-standards.md): recebe
 // e devolve dados simples e tipos do domínio, sem importar nada de HTTP.
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { normalizeEmail } from '../common/email.js';
 import type { SessionConfig } from '../config/session-config.js';
 import { SESSION_CONFIG } from '../config/session-config.js';
 import { PeopleRepository } from '../people/people.repository.js';
@@ -49,10 +50,6 @@ export interface AuthenticatedSessionData {
 export interface AuthenticatedSession {
   session: AuthenticatedSessionData;
   person: AuthenticatedPerson;
-}
-
-function normalizeEmail(email: string): string {
-  return email.trim().toLowerCase();
 }
 
 // O e-mail está bloqueado enquanto blocked_until é posterior ao agora.

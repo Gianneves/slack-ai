@@ -47,7 +47,14 @@ export class SessionsRepository extends Repository<Session> {
   }
 
   // Revogar pelo comando de contas apaga as Sessões da Pessoa (LLD, seção 6.2).
-  async deleteByPersonId(personId: string): Promise<void> {
+  async deleteByPersonId(
+    personId: string,
+    manager?: EntityManager,
+  ): Promise<void> {
+    if (manager !== undefined) {
+      await manager.delete(Session, { personId });
+      return;
+    }
     await this.delete({ personId });
   }
 
