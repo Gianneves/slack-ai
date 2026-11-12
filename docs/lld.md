@@ -266,9 +266,9 @@ de eventos do WebSocket estão a definir. As rotas já decididas:
 
 | Método e caminho | Situação | Comportamento |
 | --- | --- | --- |
-| API do chat: `POST /v1/sessions` | planejada | Entrar: "Estados e regras", seção "Sessão e login" |
-| API do chat: `GET /v1/sessions/current` | planejada | Verificar e renovar a Sessão: mesma seção |
-| API do chat: `DELETE /v1/sessions/current` | planejada | Sair: mesma seção |
+| API do chat: `POST /v1/sessions` | existe | Entrar: "Estados e regras", seção "Sessão e login" |
+| API do chat: `GET /v1/sessions/current` | existe | Verificar e renovar a Sessão: mesma seção |
+| API do chat: `DELETE /v1/sessions/current` | existe | Sair: mesma seção |
 | BFF: Server Actions entrar e sair | planejada | Gravam e apagam o cookie: "Conceitos transversais de implementação", seção "Segurança" |
 | Envio de mensagem no BFF (Server Action) | a detalhar | Mensagem gravada e agente sem receber o pedido: "Conceitos transversais de implementação", seção "Erros" |
 
@@ -289,8 +289,9 @@ Dois estados: aberta e concluída (HLD 6.6).
 
 ### 6.2 Sessão e login
 
-Situação: `planejada`. Rotas em "Interfaces"; cookie, token e senha em "Conceitos transversais
-de implementação", seção "Segurança".
+Situação: `existe` para entrar, verificar e sair; revogar pelo comando de contas está `planejada`.
+Rotas em "Interfaces"; cookie, token e senha em "Conceitos transversais de implementação", seção
+"Segurança".
 
 **Entrar**
 

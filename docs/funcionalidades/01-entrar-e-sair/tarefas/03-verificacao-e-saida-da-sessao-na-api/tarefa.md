@@ -1,6 +1,6 @@
 # F01 — T03 — Verificação e saída da Sessão na API
 
-Status: em andamento
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -33,17 +33,17 @@ com o erro de domínio e o guard que as rotas protegidas vão usar.
 
 ## Critérios de aceite
 
-- [ ] **CA1** · Uma Sessão válida devolve a Pessoa no `GET` e só renova depois de 1 dia desde
+- [x] **CA1** · Uma Sessão válida devolve a Pessoa no `GET` e só renova depois de 1 dia desde
       `last_used_at`.
-- [ ] **CA2** · Cookie ausente, token desconhecido e Sessão vencida devolvem o mesmo 401
+- [x] **CA2** · Cookie ausente, token desconhecido e Sessão vencida devolvem o mesmo 401
       `unauthenticated`, e a Sessão vencida é apagada.
-- [ ] **CA3** · O `DELETE` apaga só a Sessão apresentada; as outras Sessões da Pessoa continuam
+- [x] **CA3** · O `DELETE` apaga só a Sessão apresentada; as outras Sessões da Pessoa continuam
       válidas.
-- [ ] **CA4** · Uma Sessão revogada por apagar a linha recebe 401 na requisição seguinte.
-- [ ] **CA5** · O token não aparece em log, em resposta de erro nem no corpo do `DELETE`.
-- [ ] **CA6** · Os testes novos passam em `pnpm test:e2e`, e `pnpm lint`, `pnpm exec tsc --noEmit`,
+- [x] **CA4** · Uma Sessão revogada por apagar a linha recebe 401 na requisição seguinte.
+- [x] **CA5** · O token não aparece em log, em resposta de erro nem no corpo do `DELETE`.
+- [x] **CA6** · Os testes novos passam em `pnpm test:e2e`, e `pnpm lint`, `pnpm exec tsc --noEmit`,
       `pnpm test`, `pnpm test:int` e `pnpm build` também.
-- [ ] **CA7** · Nenhuma migração nova.
+- [x] **CA7** · Nenhuma migração nova.
 
 ## Dependências
 
