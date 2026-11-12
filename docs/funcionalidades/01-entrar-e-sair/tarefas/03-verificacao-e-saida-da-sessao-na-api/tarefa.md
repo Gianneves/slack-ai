@@ -1,11 +1,11 @@
 # F01 — T03 — Verificação e saída da Sessão na API
 
-Status: a fazer
+Status: em andamento
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
 - **LLD:** [lld.md](../../../../lld.md)
-- **Depende de:** — (a questão em aberto 1 do nome do cookie precisa ser resolvida antes do plano)
+- **Depende de:** —
 
 ## Objetivo
 
