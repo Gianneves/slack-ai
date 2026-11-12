@@ -9,13 +9,13 @@ export interface Person {
   email: string;
 }
 
-export interface SessionPerson {
+export interface PersonSummary {
   id: string;
   email: string;
 }
 
 export type LoginResult =
-  | { status: "authenticated"; token: string; person: SessionPerson }
+  | { status: "authenticated"; token: string; person: PersonSummary }
   | { status: "invalid_credentials" }
   | { status: "too_many_attempts"; retryAfterSeconds: number }
   | { status: "validation_error" }
@@ -70,7 +70,7 @@ function readRetryAfterSeconds(response: Response): number {
 
 function isLoginResponse(
   body: unknown,
-): body is { token: string; person: SessionPerson } {
+): body is { token: string; person: PersonSummary } {
   if (typeof body !== "object" || body === null) {
     return false;
   }
@@ -186,8 +186,6 @@ export async function verifySession(
       ? { status: "authenticated", person: body.person }
       : { status: "unavailable" };
   }
-
-  await readProblemCode(response);
 
   return response.status === 401
     ? { status: "unauthenticated" }

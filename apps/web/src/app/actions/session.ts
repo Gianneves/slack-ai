@@ -31,9 +31,9 @@ export async function entrar(
 ): Promise<EntrarResult> {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
-  const paraValue = formData.get("para");
-  const para = safeRedirectPath(
-    typeof paraValue === "string" ? paraValue : null,
+  const redirectValue = formData.get("para");
+  const redirectTo = safeRedirectPath(
+    typeof redirectValue === "string" ? redirectValue : null,
   );
   const result = await login({ email, password });
 
@@ -43,7 +43,7 @@ export async function entrar(
 
   const cookieStore = await cookies();
   cookieStore.set(ENV.SESSION_COOKIE_NAME, result.token, sessionCookieOptions());
-  redirect(para);
+  redirect(redirectTo);
 }
 
 export async function sair(): Promise<void> {
