@@ -256,7 +256,8 @@ flowchart TD
   Redefinir a senha revoga todas as Sessões da Pessoa.
 - Sessão vencida e Sessão revogada têm o mesmo comportamento no cliente: o próximo render recebe
   401, apaga o cookie e leva a `/entrar` (PRD, fluxo 6).
-- O comportamento do Sair quando a API está indisponível é a questão em aberto 8.
+- Sair apaga o cookie e leva a `/entrar` mesmo quando a API está indisponível; a Sessão no banco
+  continua até vencer ou ser revogada. A pessoa não fica presa na tela por uma falha da API.
 
 ### 6.4 Renovação
 
@@ -377,9 +378,9 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
       que abrir uma página basta. Trava a aceitação da história 3.
 - [ ] **7. Como a Pessoa recebe a senha inicial e se o primeiro acesso exige troca** (PRD, questão
       aberta). Não trava o código; trava o uso real.
-- [ ] **8. Sair com a API indisponível.** Apagar o cookie e sair localmente, deixando a Sessão
-      válida no banco, ou manter a Sessão e mostrar erro? Trava a aceitação do caminho de falha do
-      Sair.
+- [x] **8. Sair com a API indisponível.** Resolvida: o BFF apaga o cookie e leva a `/entrar` mesmo
+      com a API fora; a Sessão no banco continua até vencer ou ser revogada. A pessoa não fica
+      presa na tela por uma falha da API, e o cookie some daquele navegador.
 - [ ] **9. Microtexto dos estados.** O Figma é o dono do microtexto da tela de entrar, da Home, do
       menu da Pessoa e das portas de Sessão. Confirmar os frames usados nas tarefas 07 e 08. Trava
       só a redação final.
