@@ -4,6 +4,7 @@
 export type ErrorCode =
   | 'invalid_credentials'
   | 'too_many_login_attempts'
+  | 'unauthenticated'
   | 'validation_error'
   | 'http_error'
   | 'internal_error';

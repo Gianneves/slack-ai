@@ -13,8 +13,12 @@ import {
   LOGIN_WINDOW_SECONDS,
 } from './login-limits.js';
 import { LoginAttemptsRepository } from './login-attempts.repository.js';
+import { SESSION_RENEWAL_INTERVAL_SECONDS } from './session-limits.js';
 import { SessionsRepository } from './sessions.repository.js';
 import { createSessionToken, hashToken } from './tokens.js';
+import { UnauthenticatedError } from './unauthenticated.error.js';
+
+const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export interface LoginInput {
   email: string;
@@ -28,6 +32,23 @@ export interface LoginResult {
     id: string;
     email: string;
   };
+}
+
+export interface AuthenticatedPerson {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface AuthenticatedSessionData {
+  id: string;
+  personId: string;
+  expiresAt: Date;
+}
+
+export interface AuthenticatedSession {
+  session: AuthenticatedSessionData;
+  person: AuthenticatedPerson;
 }
 
 function normalizeEmail(email: string): string {
@@ -126,7 +147,7 @@ export class SessionsService {
     // uma única vez (LLD, seção 6.2 e "Segurança").
     const token = createSessionToken();
     const expiresAt = new Date(
-      now.getTime() + this.config.ttlDays * 24 * 60 * 60 * 1000,
+      now.getTime() + this.config.ttlDays * MILLISECONDS_PER_DAY,
     );
     const session = await createSessionAndClearAttempts(
       this.sessions,
@@ -148,5 +169,69 @@ export class SessionsService {
         email: person!.email,
       },
     };
+  }
+
+  // Verificar (`GET /v1/sessions/current`): token desconhecido, Sessão vencida
+  // e cookie ausente recebem unauthenticated, sem distinguir os casos
+  // (LLD, seção 6.2).
+  async authenticate(input: { token: string }): Promise<AuthenticatedSession> {
+    const session = await this.sessions.findByTokenHash(hashToken(input.token));
+    const now = new Date();
+
+    if (session === null) {
+      throw new UnauthenticatedError();
+    }
+
+    // A Sessão vencida é apagada nessa hora (LLD, seção 6.2).
+    if (session.expiresAt <= now) {
+      await this.sessions.deleteById(session.id);
+      throw new UnauthenticatedError();
+    }
+
+    const person = await this.people.findById(session.personId);
+    if (person === null) {
+      await this.sessions.deleteById(session.id);
+      throw new UnauthenticatedError();
+    }
+
+    // A Sessão é renovada só quando passou o intervalo de renovação desde o
+    // last_used_at, e a escrita é condicional (LLD, seção 6.2).
+    const renewalDueBefore = new Date(
+      now.getTime() - SESSION_RENEWAL_INTERVAL_SECONDS * 1000,
+    );
+    let currentExpiresAt = session.expiresAt;
+    if (session.lastUsedAt <= renewalDueBefore) {
+      const expiresAt = new Date(
+        now.getTime() + this.config.ttlDays * MILLISECONDS_PER_DAY,
+      );
+      const renewed = await this.sessions.renew(
+        session.id,
+        now,
+        expiresAt,
+        renewalDueBefore,
+      );
+      if (renewed) {
+        currentExpiresAt = expiresAt;
+      }
+    }
+
+    return {
+      session: {
+        id: session.id,
+        personId: session.personId,
+        expiresAt: currentExpiresAt,
+      },
+      person: {
+        id: person.id,
+        name: person.name,
+        email: person.email,
+      },
+    };
+  }
+
+  // Sair (`DELETE /v1/sessions/current`): apaga só a Sessão apresentada; as
+  // outras Sessões da Pessoa continuam valendo (LLD, seção 6.2).
+  async logout(input: { sessionId: string }): Promise<void> {
+    await this.sessions.deleteById(input.sessionId);
   }
 }

@@ -120,10 +120,11 @@ novas tentativas e idempotência").
 
 - **Cookie de sessão:** gravado e apagado pelo BFF, com `HttpOnly`, `Secure`, `SameSite=Lax`,
   `Path=/` e `Max-Age` igual à `validade do cookie de sessão`. O `Domain` vem de variável e vale
-  para os subdomínios (HLD 6.1). O cookie dura mais que a Sessão de propósito: quem decide se a
-  Sessão vale é a API do chat ("Estados e regras", seção "Sessão e login"), e um cookie com Sessão
-  vencida só leva a um 401. `Lax` não atrapalha o WebSocket, porque `app.` e `api.` são o mesmo
-  site.
+  para os subdomínios (HLD 6.1). O nome vem de `SESSION_COOKIE_NAME`, a mesma variável no BFF e na
+  API do chat, que lê o token desse cookie; as duas pontas precisam do mesmo valor. O cookie dura
+  mais que a Sessão de propósito: quem decide se a Sessão vale é a API do chat ("Estados e regras",
+  seção "Sessão e login"), e um cookie com Sessão vencida só leva a um 401. `Lax` não atrapalha o
+  WebSocket, porque `app.` e `api.` são o mesmo site.
 - **CSRF:** sem token anti-CSRF. As mutações do navegador são Server Actions, que conferem o
   cabeçalho `Origin`; o handshake do WebSocket confere a origem contra `WEB_ORIGIN`.
 - **Identificador de sessão:** token aleatório de 32 bytes, entregue ao BFF uma vez, ao entrar.
@@ -265,9 +266,9 @@ de eventos do WebSocket estão a definir. As rotas já decididas:
 
 | Método e caminho | Situação | Comportamento |
 | --- | --- | --- |
-| API do chat: `POST /v1/sessions` | planejada | Entrar: "Estados e regras", seção "Sessão e login" |
-| API do chat: `GET /v1/sessions/current` | planejada | Verificar e renovar a Sessão: mesma seção |
-| API do chat: `DELETE /v1/sessions/current` | planejada | Sair: mesma seção |
+| API do chat: `POST /v1/sessions` | existe | Entrar: "Estados e regras", seção "Sessão e login" |
+| API do chat: `GET /v1/sessions/current` | existe | Verificar e renovar a Sessão: mesma seção |
+| API do chat: `DELETE /v1/sessions/current` | existe | Sair: mesma seção |
 | BFF: Server Actions entrar e sair | planejada | Gravam e apagam o cookie: "Conceitos transversais de implementação", seção "Segurança" |
 | Envio de mensagem no BFF (Server Action) | a detalhar | Mensagem gravada e agente sem receber o pedido: "Conceitos transversais de implementação", seção "Erros" |
 
@@ -288,8 +289,9 @@ Dois estados: aberta e concluída (HLD 6.6).
 
 ### 6.2 Sessão e login
 
-Situação: `planejada`. Rotas em "Interfaces"; cookie, token e senha em "Conceitos transversais
-de implementação", seção "Segurança".
+Situação: `existe` para entrar, verificar e sair; revogar pelo comando de contas está `planejada`.
+Rotas em "Interfaces"; cookie, token e senha em "Conceitos transversais de implementação", seção
+"Segurança".
 
 **Entrar**
 
@@ -438,9 +440,10 @@ O que cada contêiner recebe está no HLD, seção 8, "Configuração e segredos
 | API do chat | `DATABASE_URL` | Conexão com o Banco do chat |
 | API do chat | `WEB_ORIGIN` | Origem aceita no handshake do WebSocket |
 | API do chat | `SESSION_TTL_DAYS` | `Duração da Sessão` |
+| API do chat | `SESSION_COOKIE_NAME` | Nome do cookie de Sessão, o mesmo do BFF; padrão `session` |
 | API do chat | `PORT` | Porta HTTP em que a API escuta |
 | Web | `CHAT_API_URL` | Endereço interno da API do chat |
-| Web | `SESSION_COOKIE_NAME` | Nome do cookie de sessão |
+| Web | `SESSION_COOKIE_NAME` | Nome do cookie de sessão, o mesmo da API; padrão `session` |
 | Web | `SESSION_COOKIE_DOMAIN` | `Domain` do cookie; vazio no local |
 | Web | `SESSION_COOKIE_SECURE` | `Secure` do cookie; `false` no local |
 

@@ -16,6 +16,7 @@ import { buildProblemBody } from './problem-body.js';
 const DOMAIN_STATUS: Record<ErrorCode, HttpStatus> = {
   invalid_credentials: HttpStatus.UNAUTHORIZED,
   too_many_login_attempts: HttpStatus.TOO_MANY_REQUESTS,
+  unauthenticated: HttpStatus.UNAUTHORIZED,
   validation_error: HttpStatus.BAD_REQUEST,
   http_error: HttpStatus.INTERNAL_SERVER_ERROR,
   internal_error: HttpStatus.INTERNAL_SERVER_ERROR,

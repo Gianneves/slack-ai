@@ -47,8 +47,8 @@ não os repete.
 4. **O cookie é do BFF, mas a API precisa do nome dele.** O BFF grava, repassa e apaga o cookie
    com `HttpOnly`, `Secure`, `SameSite=Lax`, `Path=/` e `Max-Age` de 400 dias; o `Domain` vem de
    variável (LLD, seção 3 e seção 9). A API lê o token do mesmo cookie, então as duas pontas
-   precisam do mesmo nome. O LLD só lista `SESSION_COOKIE_NAME` no projeto web; a decisão de como
-   a API recebe esse nome é a questão em aberto 1.
+   precisam do mesmo nome. As duas leem `SESSION_COOKIE_NAME`, com o padrão `session`, e o nome
+   está no LLD, seção 9 (questão em aberto 1 resolvida).
 5. **O BFF traduz o erro da API em resultado de Server Action.** O navegador não recebe
    `application/problem+json` do BFF: a ação devolve um resultado discriminado
    (`invalid_credentials`, `too_many_attempts` com os segundos do `Retry-After`,
@@ -87,7 +87,7 @@ não os repete.
 | `src/sessions/unauthenticated.error.ts` | planejada | erro de domínio `unauthenticated` |
 | `src/sessions/session-limits.ts` | planejada | constante de 1 dia do intervalo de renovação |
 | `src/common/errors/error-code.ts` e `domain-exception.filter.ts` | existem | `unauthenticated` no tipo e no mapa de status 401 |
-| `src/config/config.module.ts` e `src/config/session-config.ts` | existem | nome do cookie de Sessão (bloqueado pela questão em aberto 1) |
+| `src/config/config.module.ts` e `src/config/session-config.ts` | existem | `SESSION_COOKIE_NAME` no schema e na configuração (questão em aberto 1 resolvida) |
 | `src/accounts/` | planejada | comando de contas: criar Pessoa, revogar Sessões, redefinir a senha e limpar Sessões vencidas |
 | `test/sessions.e2e-spec.ts` | existe | casos de verificar, renovar, sair e revogar |
 | `test/accounts.int-spec.ts` | planejada | operações do comando com o banco real |
@@ -343,7 +343,7 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 
 | Risco | Impacto | Mitigação |
 | --- | --- | --- |
-| Nome do cookie divergente entre BFF e API | Toda Sessão é recusada, mesmo com login certo | Uma variável só, decisão da questão 1; teste de integração entre as duas pontas |
+| Nome do cookie divergente entre BFF e API | Toda Sessão é recusada, mesmo com login certo | Uma variável só nas duas pontas (LLD, seção 9); teste de integração entre elas |
 | Apagar o cookie no 401 durante o render | Laço de redirecionamento ou cookie velho preso | Resolver a questão 2 antes da tarefa 06; teste de ponta a ponta |
 | "Estado atual" do design system à frente do código | Tarefas 01 e 02 parecem prontas e não estão | Tratar as duas como trabalho novo; corrigir a tabela (questão 10) |
 | Verificação da Sessão no layout e na página | Duas renovações e duas idas à API por render | `cache()` do React por requisição (decisão 6) |
@@ -356,9 +356,9 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 
 ### Questões em aberto
 
-- [ ] **1. Nome do cookie na API do chat.** O LLD, seção 9, lista `SESSION_COOKIE_NAME` só no
-      projeto web. Adicionar a variável também à API do chat e registrá-la no LLD, ou fixar o nome
-      nos dois projetos? Trava as tarefas 03 e 05 e a integração entre elas.
+- [x] **1. Nome do cookie na API do chat.** Resolvida: as duas pontas leem `SESSION_COOKIE_NAME`,
+      com o padrão `session`, e a variável da API entrou no LLD, seção 9. A decisão vale para as
+      tarefas 03 e 05.
 - [ ] **2. Porta do BFF para apagar o cookie no 401.** Server Components não alteram cookie. Criar
       uma rota no BFF, como `GET /api/session/clear?para=`, e registrá-la no índice de rotas do
       LLD, ou autorizar uma ação no cliente? Trava as tarefas 06, 07 e 08.

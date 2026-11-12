@@ -194,3 +194,164 @@ describe('POST /v1/sessions (e2e)', () => {
     expect(attempts[0].failed_attempts).toBe(1);
   });
 });
+
+const CURRENT_SESSION_URL = '/v1/sessions/current';
+const SESSION_COOKIE_NAME = process.env['SESSION_COOKIE_NAME'] ?? 'session';
+const UNAUTHENTICATED_BODY = {
+  type: 'about:blank',
+  title: 'Unauthorized',
+  status: 401,
+  detail: 'Não autenticado.',
+  code: 'unauthenticated',
+};
+
+async function login(
+  app: INestApplication<App>,
+  email: string,
+  password: string,
+): Promise<string> {
+  const response = await postLogin(app, email, password).expect(201);
+  return response.body.token as string;
+}
+
+function sessionCookie(token: string): string {
+  return `${SESSION_COOKIE_NAME}=${token}`;
+}
+
+function getCurrent(app: INestApplication<App>, cookie?: string) {
+  const base = request(app.getHttpServer()).get(CURRENT_SESSION_URL);
+  return cookie === undefined ? base : base.set('Cookie', cookie);
+}
+
+function deleteCurrent(app: INestApplication<App>, cookie?: string) {
+  const base = request(app.getHttpServer()).delete(CURRENT_SESSION_URL);
+  return cookie === undefined ? base : base.set('Cookie', cookie);
+}
+
+describe('GET /v1/sessions/current (e2e)', () => {
+  let app: INestApplication<App>;
+  let dataSource: DataSource;
+
+  beforeEach(async () => {
+    app = await createTestApp();
+    dataSource = app.get<DataSource>(getDataSourceToken());
+    await clearData(dataSource);
+  });
+
+  afterEach(async () => {
+    await clearData(dataSource);
+    await app.close();
+  });
+
+  it('responde o mesmo 401 unauthenticated a cookie ausente, token desconhecido e sessão vencida', async () => {
+    const person = await createPerson(dataSource.manager, 'senha-certa');
+    const token = await login(app, person.email, person.password);
+    await dataSource.query(
+      `UPDATE sessions SET expires_at = now() - interval '1 second'`,
+    );
+
+    const absent = await getCurrent(app);
+    const unknown = await getCurrent(app, sessionCookie('token-desconhecido'));
+    const expired = await getCurrent(app, sessionCookie(token));
+
+    expect(absent.status).toBe(401);
+    expect(unknown.status).toBe(401);
+    expect(expired.status).toBe(401);
+    expect(absent.body).toEqual(UNAUTHENTICATED_BODY);
+    expect(unknown.body).toEqual(UNAUTHENTICATED_BODY);
+    expect(expired.body).toEqual(UNAUTHENTICATED_BODY);
+  });
+
+  it('devolve a pessoa e não renova a sessão antes de 1 dia', async () => {
+    const person = await createPerson(dataSource.manager, 'senha-certa');
+    const token = await login(app, person.email, person.password);
+    const before: Array<{ last_used_at: Date; expires_at: Date }> =
+      await dataSource.query('SELECT last_used_at, expires_at FROM sessions');
+
+    const response = await getCurrent(app, sessionCookie(token)).expect(200);
+
+    expect(response.body).toEqual({
+      person: {
+        id: person.id,
+        name: 'Pessoa de Teste',
+        email: person.email,
+      },
+    });
+    const after: Array<{ last_used_at: Date; expires_at: Date }> =
+      await dataSource.query('SELECT last_used_at, expires_at FROM sessions');
+    expect(after[0].last_used_at).toEqual(before[0].last_used_at);
+    expect(after[0].expires_at).toEqual(before[0].expires_at);
+  });
+
+  it('renova a sessão depois de 1 dia desde o último uso', async () => {
+    const person = await createPerson(dataSource.manager, 'senha-certa');
+    const token = await login(app, person.email, person.password);
+    await dataSource.query(
+      `UPDATE sessions
+       SET last_used_at = now() - interval '2 days',
+           expires_at = now() + interval '28 days'`,
+    );
+    const before: Array<{ last_used_at: Date; expires_at: Date }> =
+      await dataSource.query('SELECT last_used_at, expires_at FROM sessions');
+
+    await getCurrent(app, sessionCookie(token)).expect(200);
+
+    const after: Array<{ last_used_at: Date; expires_at: Date }> =
+      await dataSource.query('SELECT last_used_at, expires_at FROM sessions');
+    expect(after[0].last_used_at.getTime()).toBeGreaterThan(
+      before[0].last_used_at.getTime(),
+    );
+    expect(after[0].expires_at.getTime()).toBeGreaterThan(
+      before[0].expires_at.getTime(),
+    );
+  });
+
+  it('sai apagando só a sessão apresentada e mantém a outra', async () => {
+    const person = await createPerson(dataSource.manager, 'senha-certa');
+    const first = await login(app, person.email, person.password);
+    const second = await login(app, person.email, person.password);
+
+    const response = await deleteCurrent(app, sessionCookie(first)).expect(204);
+
+    expect(response.text).toBe('');
+    await getCurrent(app, sessionCookie(first)).expect(401);
+    await getCurrent(app, sessionCookie(second)).expect(200);
+    const rows: Array<unknown> = await dataSource.query('SELECT 1 FROM sessions');
+    expect(rows).toHaveLength(1);
+  });
+
+  it('recusa com 401 no GET uma sessão revogada por apagar a linha', async () => {
+    const person = await createPerson(dataSource.manager, 'senha-certa');
+    const token = await login(app, person.email, person.password);
+    await dataSource.query('DELETE FROM sessions');
+
+    const response = await getCurrent(app, sessionCookie(token));
+
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe('unauthenticated');
+  });
+
+  it('recusa com 401 no DELETE uma sessão revogada por apagar a linha', async () => {
+    const person = await createPerson(dataSource.manager, 'senha-certa');
+    const token = await login(app, person.email, person.password);
+    await dataSource.query('DELETE FROM sessions');
+
+    const response = await deleteCurrent(app, sessionCookie(token));
+
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe('unauthenticated');
+  });
+
+  it('apaga a sessão vencida quando ela é apresentada', async () => {
+    const person = await createPerson(dataSource.manager, 'senha-certa');
+    const token = await login(app, person.email, person.password);
+    await dataSource.query(
+      `UPDATE sessions SET expires_at = now() - interval '1 second'`,
+    );
+
+    await getCurrent(app, sessionCookie(token)).expect(401);
+
+    const rows: Array<unknown> = await dataSource.query('SELECT 1 FROM sessions');
+    expect(rows).toHaveLength(0);
+  });
+});
