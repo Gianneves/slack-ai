@@ -22,7 +22,7 @@ Implemente uma tarefa, nesta sessão e nesta branch. A tarefa é o `tarefa.md` q
 
 4. **Commit.** Com o trabalho pronto, faça o commit na branch atual, sem push.
 
-5. **Revisar.** Chame a skill `review`. Corrija o que você aceitar das duas e faça o commit das correções.
+5. **Revisar.** Chame a skill `code-review` com o ponto fixo no último commit que tocou o `plano.md` da tarefa e a spec em `spec.md` da funcionalidade. Corrija o que você aceitar das duas e faça o commit das correções.
 
 6. **Conferir.** Faça a conferência da tarefa conforme está descrito nas regras do projetos. O que diverge é corrigido no código ou levado ao usuário.
 
