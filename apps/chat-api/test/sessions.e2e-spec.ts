@@ -320,18 +320,26 @@ describe('GET /v1/sessions/current (e2e)', () => {
     expect(rows).toHaveLength(1);
   });
 
-  it('recusa com 401 uma sessão revogada por apagar a linha', async () => {
+  it('recusa com 401 no GET uma sessão revogada por apagar a linha', async () => {
     const person = await createPerson(dataSource.manager, 'senha-certa');
     const token = await login(app, person.email, person.password);
     await dataSource.query('DELETE FROM sessions');
 
-    const getResponse = await getCurrent(app, sessionCookie(token));
-    const deleteResponse = await deleteCurrent(app, sessionCookie(token));
+    const response = await getCurrent(app, sessionCookie(token));
 
-    expect(getResponse.status).toBe(401);
-    expect(getResponse.body.code).toBe('unauthenticated');
-    expect(deleteResponse.status).toBe(401);
-    expect(deleteResponse.body.code).toBe('unauthenticated');
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe('unauthenticated');
+  });
+
+  it('recusa com 401 no DELETE uma sessão revogada por apagar a linha', async () => {
+    const person = await createPerson(dataSource.manager, 'senha-certa');
+    const token = await login(app, person.email, person.password);
+    await dataSource.query('DELETE FROM sessions');
+
+    const response = await deleteCurrent(app, sessionCookie(token));
+
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe('unauthenticated');
   });
 
   it('apaga a sessão vencida quando ela é apresentada', async () => {

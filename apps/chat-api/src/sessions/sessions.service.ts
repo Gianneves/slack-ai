@@ -199,18 +199,27 @@ export class SessionsService {
     const renewalDueBefore = new Date(
       now.getTime() - SESSION_RENEWAL_INTERVAL_SECONDS * 1000,
     );
+    let currentExpiresAt = session.expiresAt;
     if (session.lastUsedAt <= renewalDueBefore) {
       const expiresAt = new Date(
         now.getTime() + this.config.ttlDays * MILLISECONDS_PER_DAY,
       );
-      await this.sessions.renew(session.id, now, expiresAt, renewalDueBefore);
+      const renewed = await this.sessions.renew(
+        session.id,
+        now,
+        expiresAt,
+        renewalDueBefore,
+      );
+      if (renewed) {
+        currentExpiresAt = expiresAt;
+      }
     }
 
     return {
       session: {
         id: session.id,
         personId: session.personId,
-        expiresAt: session.expiresAt,
+        expiresAt: currentExpiresAt,
       },
       person: {
         id: person.id,
