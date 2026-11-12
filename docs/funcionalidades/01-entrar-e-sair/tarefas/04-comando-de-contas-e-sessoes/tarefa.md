@@ -1,6 +1,6 @@
 # F01 — T04 — Comando de contas e Sessões
 
-Status: em andamento
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -32,16 +32,16 @@ redefinir a senha e limpar Sessões vencidas.
 
 ## Critérios de aceite
 
-- [ ] **CA1** · `create-person` cria a Pessoa com e-mail normalizado e senha Argon2id, e a Pessoa
+- [x] **CA1** · `create-person` cria a Pessoa com e-mail normalizado e senha Argon2id, e a Pessoa
       entra pelo `POST /v1/sessions`.
-- [ ] **CA2** · `revoke-sessions` faz a próxima requisição com a Sessão revogada receber 401.
-- [ ] **CA3** · `reset-password` troca a senha, e todas as Sessões abertas da Pessoa deixam de
+- [x] **CA2** · `revoke-sessions` faz a próxima requisição com a Sessão revogada receber 401.
+- [x] **CA3** · `reset-password` troca a senha, e todas as Sessões abertas da Pessoa deixam de
       valer.
-- [ ] **CA4** · `purge-expired-sessions` apaga só as Sessões vencidas.
-- [ ] **CA5** · A senha não aparece nos argumentos, no log nem em arquivo do repositório.
-- [ ] **CA6** · `pnpm lint`, `pnpm exec tsc --noEmit`, `pnpm test`, `pnpm test:int`,
+- [x] **CA4** · `purge-expired-sessions` apaga só as Sessões vencidas.
+- [x] **CA5** · A senha não aparece nos argumentos, no log nem em arquivo do repositório.
+- [x] **CA6** · `pnpm lint`, `pnpm exec tsc --noEmit`, `pnpm test`, `pnpm test:int`,
       `pnpm test:e2e` e `pnpm build` passam.
-- [ ] **CA7** · Nenhuma migração nova.
+- [x] **CA7** · Nenhuma migração nova.
 
 ## Dependências
 
