@@ -8,6 +8,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
+    "accounts": "node dist/accounts/cli.js",
     "build": "nest build",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

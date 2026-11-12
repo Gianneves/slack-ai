@@ -34,6 +34,7 @@ docker compose -f compose.yaml exec chat-api <comando>
 | `pnpm format` | Prettier em `src/` e `test/` |
 | `pnpm exec tsc --noEmit` | Checagem de tipos |
 | `pnpm build` | Compila para `dist/` |
+| `pnpm accounts <operação>` | Comando de contas: cria Pessoa, revoga Sessões, redefine a senha e limpa Sessões vencidas; roda o `dist`, então rode `pnpm build` antes |
 | `pnpm migration:generate migrations/<Nome>` | Gera uma migração a partir da diferença entre as entidades e o Banco do chat |
 | `pnpm migration:run` | Roda as migrações pendentes no Banco do chat |
 | `pnpm migration:revert` | Reverte a última migração rodada |

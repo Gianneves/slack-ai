@@ -188,7 +188,7 @@ O nome é fixado por esta spec; as operações da F01 são:
 | Operação | Efeito |
 | --- | --- |
 | `create-person` | Cria a Pessoa com e-mail normalizado, nome e hash Argon2id da senha lida da entrada padrão |
-| `revoke-sessions` | Apaga as Sessões da Pessoa (granularidade na questão em aberto 3) |
+| `revoke-sessions` | Apaga todas as Sessões da Pessoa, identificada pelo e-mail normalizado |
 | `reset-password` | Troca o hash da senha e apaga todas as Sessões da Pessoa na mesma transação |
 | `purge-expired-sessions` | Apaga as Sessões com `expires_at` no passado |
 
@@ -251,8 +251,9 @@ flowchart TD
 
 - Sair apaga a Sessão apresentada e leva a `/entrar`; as outras Sessões da Pessoa continuam
   valendo (LLD 6.2; PRD, fluxo 8).
-- Revogar, pelo comando de contas, apaga a linha; a próxima requisição com aquela Sessão recebe
-  `unauthenticated` (LLD 6.2). Redefinir a senha revoga todas as Sessões da Pessoa.
+- Revogar, pelo comando de contas, apaga todas as Sessões da Pessoa identificada pelo e-mail
+  normalizado; a próxima requisição com qualquer uma delas recebe `unauthenticated` (LLD 6.2).
+  Redefinir a senha revoga todas as Sessões da Pessoa.
 - Sessão vencida e Sessão revogada têm o mesmo comportamento no cliente: o próximo render recebe
   401, apaga o cookie e leva a `/entrar` (PRD, fluxo 6).
 - O comportamento do Sair quando a API está indisponível é a questão em aberto 8.
@@ -362,8 +363,10 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 - [ ] **2. Porta do BFF para apagar o cookie no 401.** Server Components não alteram cookie. Criar
       uma rota no BFF, como `GET /api/session/clear?para=`, e registrá-la no índice de rotas do
       LLD, ou autorizar uma ação no cliente? Trava as tarefas 06, 07 e 08.
-- [ ] **3. Granularidade da revogação pelo comando.** Revogar uma Sessão específica ou todas as
-      Sessões de uma Pessoa? Trava a tarefa 04 e o roteiro manual.
+- [x] **3. Granularidade da revogação pelo comando.** Resolvida: `revoke-sessions` apaga todas as
+      Sessões da Pessoa identificada pelo e-mail normalizado. O comando de operação conhece o
+      e-mail, não o token, e a revogação por Pessoa corta o acesso de quem perdeu a conta; a
+      decisão vale para a tarefa 04 e o roteiro manual.
 - [ ] **4. Como o Playwright cria e revoga Pessoas.** Rodar a operação do comando de contas dentro
       do contêiner `e2e`, ou usar SQL e um hash pronto? Trava a tarefa 09.
 - [ ] **5. Dono do snapshot OpenAPI.** O LLD diz que o snapshot é o dono do contrato, mas ele não

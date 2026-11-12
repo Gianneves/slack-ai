@@ -289,8 +289,8 @@ Dois estados: aberta e concluída (HLD 6.6).
 
 ### 6.2 Sessão e login
 
-Situação: `existe` para entrar, verificar e sair; revogar pelo comando de contas está `planejada`.
-Rotas em "Interfaces"; cookie, token e senha em "Conceitos transversais de implementação", seção
+Situação: `existe` para entrar, verificar, sair e para as operações do comando de contas. Rotas em
+"Interfaces"; cookie, token e senha em "Conceitos transversais de implementação", seção
 "Segurança".
 
 **Entrar**
@@ -314,8 +314,9 @@ Rotas em "Interfaces"; cookie, token e senha em "Conceitos transversais de imple
 **Sair e revogar**
 
 - Sair apaga a Sessão apresentada. As outras Sessões da mesma Pessoa continuam valendo.
-- Revogar é apagar a linha, pelo comando de contas; a próxima requisição com aquela Sessão recebe
-  `unauthenticated`. Redefinir a senha revoga todas as Sessões da Pessoa.
+- Revogar, pelo comando de contas, apaga todas as Sessões da Pessoa identificada pelo e-mail
+  normalizado; a próxima requisição com qualquer uma delas recebe `unauthenticated`. Redefinir a
+  senha revoga todas as Sessões da Pessoa.
 
 **Limite de tentativas** ([ADR 0023](adr/0023-limite-de-login-por-email.md))
 
