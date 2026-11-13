@@ -371,7 +371,7 @@ quando apresentadas ("Estados e regras", seção "Sessão e login") e pela opera
 | Rota | Acesso | Lê | Ações | Situação |
 | --- | --- | --- | --- | --- |
 | `/entrar` | Público | Sessão, quando há cookie | Entrar com e-mail e senha | existe |
-| `/` (Home) | Sessão | Pessoa da Sessão | Sair | planejada |
+| `/` (Home) | Sessão | Pessoa da Sessão | Sair | existe |
 | A definir | Sessão | Histórico da conversa | Enviar, editar, apagar, citar; "digitando"; botões de resposta pronta | a detalhar |
 | A definir (lateral) | Sessão | Conversas, com não lidas e menções | Abrir conversa | a detalhar |
 | A definir | Sessão | Atividade: Menções, DMs, Tarefas | Abrir a mensagem; concluir e reabrir tarefa | a detalhar |

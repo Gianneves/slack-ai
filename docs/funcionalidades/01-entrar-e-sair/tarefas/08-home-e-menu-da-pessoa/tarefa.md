@@ -1,6 +1,6 @@
 # F01 — T08 — Home e menu da Pessoa
 
-Status: em andamento
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -33,12 +33,12 @@ Entregar a Home / Vazio dentro do layout autenticado e o menu da Pessoa com Sair
 
 ## Critérios de aceite
 
-- [ ] **CA1** · A Home renderiza dentro do layout autenticado, e a Pessoa exibida é a da Sessão.
-- [ ] **CA2** · O menu da Pessoa mostra a Pessoa da Sessão e Sair encerra a Sessão daquele
+- [x] **CA1** · A Home renderiza dentro do layout autenticado, e a Pessoa exibida é a da Sessão.
+- [x] **CA2** · O menu da Pessoa mostra a Pessoa da Sessão e Sair encerra a Sessão daquele
       navegador e leva a `/entrar`.
-- [ ] **CA3** · A Home segue os frames Home / Vazio e menu da Pessoa, nos dois temas.
-- [ ] **CA4** · Tudo funciona por teclado.
-- [ ] **CA5** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
+- [x] **CA3** · A Home segue os frames Home / Vazio e menu da Pessoa, nos dois temas.
+- [x] **CA4** · Tudo funciona por teclado.
+- [x] **CA5** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
 
 ## Dependências
 
