@@ -21,7 +21,7 @@ function pluralize(value: number, singular: string, plural: string): string {
   return value === 1 ? `1 ${singular}` : `${value} ${plural}`;
 }
 
-export function formatRetryAfter(seconds: number): string {
+function formatRetryAfter(seconds: number): string {
   if (seconds < 60) {
     return pluralize(seconds, "segundo", "segundos");
   }
@@ -68,7 +68,7 @@ export function LoginForm({ para }: LoginFormProps) {
             autoFocus
             placeholder="pessoa@empresa.com"
             aria-invalid={isFieldError || undefined}
-            aria-describedby={message ? ERROR_ID : undefined}
+            aria-describedby={isFieldError ? ERROR_ID : undefined}
           />
         </Field>
         <Field label="Senha" htmlFor="password">
@@ -79,7 +79,7 @@ export function LoginForm({ para }: LoginFormProps) {
             autoComplete="current-password"
             placeholder="Sua senha"
             aria-invalid={isFieldError || undefined}
-            aria-describedby={message ? ERROR_ID : undefined}
+            aria-describedby={isFieldError ? ERROR_ID : undefined}
           />
         </Field>
       </div>

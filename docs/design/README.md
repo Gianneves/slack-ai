@@ -50,6 +50,8 @@ pasta:
 | `entrar-validacao.png` | Validação da API |
 | `entrar-bloqueio.png` | Bloqueio por tentativas, com o tempo que falta |
 | `entrar-api-indisponivel.png` | API fora no envio |
+| `entrar-porta-de-erro-claro.png` | Porta de erro da sessão, tema claro |
+| `entrar-porta-de-erro-escuro.png` | Porta de erro da sessão, tema escuro |
 | `home-apos-entrar.png` | Home depois de entrar com credencial válida |
 
 O aviso "N" no canto inferior esquerdo é o indicador do `next dev`, não faz parte da tela.

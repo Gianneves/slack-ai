@@ -11,17 +11,17 @@ import { ENV } from "@/config/env";
 
 export const instant = false;
 
-const ENTRAR_PATH = "/entrar";
-
-function readPara(value: string | string[] | undefined): string | null {
-  return typeof value === "string" && isSafeRedirectPath(value) ? value : null;
-}
+const LOGIN_PATH = "/entrar";
 
 export default async function EntrarPage({
   searchParams,
 }: PageProps<"/entrar">) {
   const params = await searchParams;
-  const para = readPara(params.para);
+  const requested = params.para;
+  const para =
+    typeof requested === "string" && isSafeRedirectPath(requested)
+      ? requested
+      : null;
 
   const cookieStore = await cookies();
 
@@ -36,9 +36,7 @@ export default async function EntrarPage({
       redirect(clearSessionUrl());
     }
 
-    const retryHref = para
-      ? appendRedirectParam(ENTRAR_PATH, para)
-      : ENTRAR_PATH;
+    const retryHref = appendRedirectParam(LOGIN_PATH, para);
 
     return <SessionError retryHref={retryHref} />;
   }

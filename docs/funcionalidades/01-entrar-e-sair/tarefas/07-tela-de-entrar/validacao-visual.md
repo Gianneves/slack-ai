@@ -21,6 +21,8 @@ continua pendente e deve ser refeita quando o Figma estiver acessível.
 | Validação | `entrar-validacao.png` | mesma composição do erro de credencial, com a frase de validação |
 | Bloqueio | `entrar-bloqueio.png` | alerta abaixo da senha com o tempo vindo do `Retry-After` ("10 minutos" na captura); campos com borda normal e botão ativo |
 | API indisponível | `entrar-api-indisponivel.png` | alerta de indisponibilidade mantendo o formulário, sem porta de erro |
+| Porta de erro, claro | `entrar-porta-de-erro-claro.png` | `SessionError` da F01-T06 centralizado, ícone em `surface-subtle`, título `title`/`font-black`, link "Tentar de novo" em `secondary`; sem o formulário |
+| Porta de erro, escuro | `entrar-porta-de-erro-escuro.png` | os mesmos utilitários no tema escuro, com texto e borda dos tokens |
 | Home depois de entrar | `home-apos-entrar.png` | destino do login, com o nome da Pessoa da verificação |
 
 ## Divergências registradas
