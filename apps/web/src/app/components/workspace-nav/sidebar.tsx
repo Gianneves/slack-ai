@@ -7,6 +7,9 @@ const CHANNELS = ["geral", "produto", "suporte"];
 
 const DIRECT_MESSAGES = ["Bruno Lima", "Carla Souza"];
 
+const ROW_CLASS =
+  "flex h-7 items-center gap-2 rounded-item px-2 text-small text-sidebar-fg";
+
 type SidebarProps = {
   person: Person;
 };
@@ -30,10 +33,7 @@ export function Sidebar({ person }: SidebarProps) {
       <section className="mt-4 flex flex-col gap-1">
         <h2 className="px-2 text-small font-bold text-sidebar-fg">Canais</h2>
         {CHANNELS.map((channel) => (
-          <span
-            key={channel}
-            className="flex h-7 items-center gap-2 rounded-item px-2 text-small text-sidebar-fg"
-          >
+          <span key={channel} className={ROW_CLASS}>
             <Hash size={16} aria-hidden />
             <span className="truncate">{channel}</span>
           </span>
@@ -44,10 +44,7 @@ export function Sidebar({ person }: SidebarProps) {
           Mensagens diretas
         </h2>
         {DIRECT_MESSAGES.map((name) => (
-          <span
-            key={name}
-            className="flex h-7 items-center gap-2 rounded-item px-2 text-small text-sidebar-fg"
-          >
+          <span key={name} className={ROW_CLASS}>
             <Avatar name={name} size="xs" />
             <span className="truncate">{name}</span>
           </span>

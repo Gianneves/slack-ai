@@ -1,35 +1,40 @@
 import { Bell, Home, MessageSquare, MoreHorizontal } from "lucide-react";
+import { cn } from "@/app/utils/cn";
 
 const RAIL_ITEMS = [
-  { name: "home", icon: Home, isActive: true },
-  { name: "direct-messages", icon: MessageSquare, isActive: false },
-  { name: "activity", icon: Bell, isActive: false },
-  { name: "more", icon: MoreHorizontal, isActive: false },
+  { id: "home", label: "Início", icon: Home, isActive: true },
+  { id: "direct-messages", label: "DMs", icon: MessageSquare, isActive: false },
+  { id: "activity", label: "Atividade", icon: Bell, isActive: false },
+  { id: "more", label: "Mais", icon: MoreHorizontal, isActive: false },
 ] as const;
+
+const ROW_CLASS =
+  "flex w-full flex-col items-center gap-0.5 rounded-item py-1 text-micro";
 
 export function Rail() {
   return (
     <nav
       aria-label="Seções do workspace"
-      className="flex w-rail shrink-0 flex-col items-center gap-2 bg-chrome py-3"
+      className="flex w-rail shrink-0 flex-col items-center gap-1 bg-chrome px-1.5 py-3"
     >
       <span
         aria-hidden
-        className="flex size-9 items-center justify-center rounded-item bg-primary text-micro font-black text-on-primary"
+        className="flex size-9 items-center justify-center rounded-item bg-primary font-black text-on-primary"
       >
         FC
       </span>
-      {RAIL_ITEMS.map(({ name, icon: Icon, isActive }) => (
+      {RAIL_ITEMS.map(({ id, label, icon: Icon, isActive }) => (
         <span
-          key={name}
-          aria-hidden
-          className={
+          key={id}
+          className={cn(
+            ROW_CLASS,
             isActive
-              ? "flex size-9 items-center justify-center rounded-item bg-sidebar-active text-sidebar-on-active"
-              : "flex size-9 items-center justify-center rounded-item text-sidebar-fg"
-          }
+              ? "bg-sidebar-active text-sidebar-on-active"
+              : "text-sidebar-fg",
+          )}
         >
           <Icon size={18} aria-hidden />
+          <span>{label}</span>
         </span>
       ))}
     </nav>

@@ -16,7 +16,7 @@ menu da Pessoa do Figma continua pendente e deve ser refeita quando o Figma esti
 
 | Estado | Captura | O que foi conferido |
 | --- | --- | --- |
-| Home / Vazio, claro | `home-vazio-claro.png` | Rail `w-rail` em `chrome`, sidebar `w-sidebar` em `sidebar`, área principal em `surface`; linhas de 28 px (`h-7`) com `rounded-item`; workspace em `text-body`/`font-black`; busca em `sidebar-field`; `EmptyState` com quadro de 48 px em `surface-subtle`, título `text-title`/`font-black` em `fg` e descrição `text-small` em `fg-muted` |
+| Home / Vazio, claro | `home-vazio-claro.png` | Rail `w-rail` em `chrome`, com o bloco "FC" e as linhas Início, DMs, Atividade e Mais em `text-micro`, a ativa em `sidebar-active`; sidebar `w-sidebar` em `sidebar`, área principal em `surface`; linhas de 28 px (`h-7`) com `rounded-item`; workspace em `text-body`/`font-black`; busca em `sidebar-field`; `EmptyState` com quadro de 48 px em `surface-subtle`, título `text-title`/`font-black` em `fg` e descrição `text-small` em `fg-muted` |
 | Home / Vazio, escuro | `home-vazio-escuro.png` | os mesmos utilitários com os valores do tema escuro: rail `#121016`, sidebar `#19171d`, página `#1a1d21`, texto `fg` e `fg-muted`, sem `dark:` de cor |
 | Menu da Pessoa, claro | `home-menu-claro.png` | menu acima do gatilho, `rounded-card`, `shadow-2`, 240 px; cabeçalho com Avatar `md` (`rounded-item`), nome em `text-body`/`font-black` e e-mail em `text-small`/`fg-muted`; separador em `border-subtle`; item Sair `h-8` em `text-small`, destacado em `sidebar-active` com o foco visível de 2 px |
 | Menu da Pessoa, escuro | `home-menu-escuro.png` | os mesmos utilitários no tema escuro: `surface-raised`, borda de `shadow-2`, textos `fg` e `fg-muted`, item destacado em `sidebar-active` |
@@ -67,8 +67,8 @@ Os três terminam com sucesso. O `build` também é o que serve a web das captur
 - Os frames do Stitch têm uma barra superior, uma ação de compor e um atalho de busca que a
   implementação não tem: são de outras funcionalidades, e o escopo da F01-T08 proíbe rota e
   controle morto na casca.
-- Menu de 240 px (`w-60`), e não 260 px: precisa caber no padding da sidebar, e a escala do
-  Tailwind não tem 260 px em `w-*`.
+- O rail não repete o avatar da Pessoa da referência: o menu da Pessoa fica no rodapé da sidebar,
+  e o `Rail` não recebe props no plano.
 - A fonte da referência do Stitch é Source Sans 3; a implementação usa Lato pelo `next/font`.
 
 ## Pendências
