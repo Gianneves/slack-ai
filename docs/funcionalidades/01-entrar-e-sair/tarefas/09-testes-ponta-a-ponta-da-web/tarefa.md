@@ -1,6 +1,6 @@
 # F01 — T09 — Testes de ponta a ponta da web
 
-Status: em andamento
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -38,18 +38,18 @@ Provar os fluxos da F01 pela tela, contra a web e a API reais, no único ponto d
 
 ## Critérios de aceite
 
-- [ ] **CA1** · A suíte roda no contêiner `e2e`, usa a web e a API reais e roda em modo headless,
+- [x] **CA1** · A suíte roda no contêiner `e2e`, usa a web e a API reais e roda em modo headless,
       sem abrir janela do navegador.
-- [ ] **CA2** · A escrita e a depuração seguem a skill `playwright-cli`, com o `playwright-cli` do
+- [x] **CA2** · A escrita e a depuração seguem a skill `playwright-cli`, com o `playwright-cli` do
       `@playwright/test` do `web`.
-- [ ] **CA3** · O `apps/web/AGENTS.md` documenta os comandos de e2e e a skill.
-- [ ] **CA4** · Cada teste cria os próprios dados e não depende de ordem nem de dado de outro
+- [x] **CA3** · O `apps/web/AGENTS.md` documenta os comandos de e2e e a skill.
+- [x] **CA4** · Cada teste cria os próprios dados e não depende de ordem nem de dado de outro
       teste.
-- [ ] **CA5** · Os casos da seção 8 da spec passam, incluindo a recusa de Sessão revogada e
+- [x] **CA5** · Os casos da seção 8 da spec passam, incluindo a recusa de Sessão revogada e
       vencida.
-- [ ] **CA6** · O axe não acusa violação nas telas de entrar e Home.
-- [ ] **CA7** · O roteiro manual cobre o que a automação não alcança.
-- [ ] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` da web passam.
+- [x] **CA6** · O axe não acusa violação nas telas de entrar e Home.
+- [x] **CA7** · O roteiro manual cobre o que a automação não alcança.
+- [x] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` da web passam.
 
 ## Dependências
 
