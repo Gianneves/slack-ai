@@ -20,9 +20,9 @@ export function UserMenu({ person }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label={`Menu de ${person.name}`}
         className="flex w-full items-center gap-2 rounded-item p-1.5 text-left text-sidebar-fg transition-colors duration-100 hover:bg-sidebar-hover data-[state=open]:bg-sidebar-hover"
       >
+        <span className="sr-only">Menu de </span>
         <Avatar name={person.name} size="md" />
         <span className="min-w-0 flex-1 truncate text-small font-bold text-sidebar-fg-strong">
           {person.name}

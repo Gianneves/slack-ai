@@ -19,6 +19,7 @@ export default async function Home() {
         <EmptyState
           icon={MessageSquare}
           title="Bem-vindo ao Full Cycle Chat"
+          titleAs="h1"
           description="Escolha uma conversa na barra lateral para começar."
         />
       </main>

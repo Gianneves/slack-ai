@@ -30,6 +30,29 @@ docker compose -f compose.yaml exec web <comando>
 2. `pnpm exec tsc --noEmit`
 3. `pnpm build`
 
+## Testes de ponta a ponta
+
+A suíte fica em `e2e/`, com o Playwright do próprio `web` (`@playwright/test`), e roda no contêiner `e2e`, contra a web em `http://web:3000` e a API real. O navegador é só o Chromium, em modo headless, e o relatório HTML não abre sozinho (`PLAYWRIGHT_HTML_OPEN=never`).
+
+1. Suba a web e a API, como no `AGENTS.md` da raiz.
+2. Suba o `e2e`, só pelo `profile` e parado:
+
+   ```bash
+   docker compose -f compose.yaml --profile e2e up -d --wait e2e
+   ```
+
+3. Rode a suíte a partir do `apps/web`, dentro do contêiner:
+
+   ```bash
+   docker compose -f compose.yaml exec e2e sh -c 'cd apps/web && npx playwright test'
+   ```
+
+O `globalSetup` constrói o `chat-api` com o `@nestjs/cli` e confere a saúde da web e da API; sem elas no ar, a suíte falha com a mensagem do que falta. Cada teste cria a própria Pessoa `e2e-…@teste.local` pelo comando de contas; a limpeza é por prefixo, no setup e no teardown.
+
+**Depuração.** Um caso que falha é depurado com a skill `playwright-cli`: rode `npx playwright test --debug=cli` em segundo plano, dentro do `e2e`, e, quando o comando imprimir o nome da sessão, conecte com `npx playwright cli attach <sessão>`. O `playwright-cli` é o do `@playwright/test` do `web`, chamado por `npx`; não instale o `playwright-cli` globalmente.
+
+Os artefatos (`test-results/`, `playwright-report/`, `blob-report/` e `.playwright-cli/`) ficam fora do git.
+
 ## Server Components
 
 Todo componente nasce como Server Component. O `"use client"` precisa de um motivo: estado ou efeito, manipulador de evento, API do navegador ou hook que só existe no cliente. Buscar dados, ler cookies, formatar valores e montar layout não são motivo.
