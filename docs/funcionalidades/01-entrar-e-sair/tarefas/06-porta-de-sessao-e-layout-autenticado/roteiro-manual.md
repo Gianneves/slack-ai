@@ -4,6 +4,19 @@ Passos de CA3, CA6 e CA7. O `chat-api` fica parado nos passos de falha de verifi
 continua no ar. A Home desta tarefa mostra só a Pessoa da verificação, porque o conteúdo final é
 da F01-T08.
 
+## Divergência: redirect do 401 e JavaScript
+
+Com `cacheComponents`, a casca estática é enviada antes da verificação da Sessão. O `redirect()`
+do layout sai na resposta transmitida (`NEXT_REDIRECT`) e vira navegação no cliente: não há `307`
+HTTP. A rota de limpeza responde `303` e apaga o cookie quando é alcançada, e CA2 funciona no
+navegador com JavaScript. O "funciona sem JavaScript" que constava do plano não se confirma.
+
+Decisão: funcionar sem JavaScript não é requisito — o PRD e o HLD pedem teclado, e o produto
+depende de WebSocket. A rota de limpeza continua sendo a peça server-side que apaga o cookie; o
+que muda é a justificativa, corrigida na spec (decisão 11, seção 6.1 e riscos) e no LLD, seção 8,
+sem mudança de código. Não espere `307` no `curl` de uma tela logada com token inválido; espere a
+resposta transmitida e, na rota de limpeza, `303`.
+
 ## Preparação
 
 1. Suba o ambiente e a web:
@@ -110,8 +123,9 @@ da F01-T08.
 
 - `GET /` com Sessão válida: `200`, `Cache-Control: no-store` e "Pessoa T06" no corpo.
 - `GET /` com token inválido: verificação não autenticada. O Next emite o redirecionamento para
-  `/api/session/clear?para=%2F` na resposta transmitida (`NEXT_REDIRECT`); a rota de limpeza faz o
-  `303` e apaga o cookie.
+  `/api/session/clear?para=%2F` na resposta transmitida (`NEXT_REDIRECT`); a navegação depende do
+  runtime do cliente, não há `307` HTTP. A rota de limpeza, alcançada, faz o `303` e apaga o
+  cookie.
 - `GET /api/session/clear?para=%2Fcanais%3Fx%3D1`: `303`, `Location:
   /entrar?para=%2Fcanais%3Fx%3D1`, `Set-Cookie: session=; Path=/; Max-Age=0; HttpOnly;
   SameSite=lax` e `Cache-Control: no-store`.

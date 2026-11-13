@@ -76,7 +76,11 @@ não os repete.
     layout logado e a tela de entrar redirecionam para `GET /api/session/clear?para=<caminho>`,
     que valida o `para` com a mesma função do login, apaga o cookie com os atributos do LLD,
     seção 3, e leva a `/entrar` com `para` válido, ou a `/entrar` sem `para` quando o valor é
-    inválido. A rota não chama a API e fica fora do proxy (questão em aberto 2 resolvida).
+    inválido. A rota não chama a API e fica fora do proxy (questão em aberto 2 resolvida). Com
+    `cacheComponents`, o `redirect()` do layout é emitido depois da casca estática e vira navegação
+    no cliente, não `307` HTTP; o `303` é da rota, quando alcançada. O desenho não promete
+    funcionar sem JavaScript: o requisito de acessibilidade é teclado, e o produto depende de
+    WebSocket.
 
 ## 3. Componentes afetados
 
@@ -222,7 +226,9 @@ flowchart TD
   com o caminho pedido (LLD, seção 8).
 - O layout logado faz a verificação de verdade a cada renderização. Um 401 leva à rota
   `GET /api/session/clear?para=<caminho>`, que apaga o cookie e leva a `/entrar`; falha de rede,
-  5xx ou tempo esgotado mostra a porta de erro e **não** leva a entrar (PRD, fluxo 7).
+  5xx ou tempo esgotado mostra a porta de erro e **não** leva a entrar (PRD, fluxo 7). Com
+  `cacheComponents`, esse redirect sai na resposta transmitida e depende do runtime do cliente; a
+  rota responde `303` quando alcançada. Não há promessa de funcionar sem JavaScript.
 - O `?para=` é validado no servidor: só caminho relativo que começa com `/` e não com `//`. Sem
   ele, ou com valor inválido, a Home é o destino.
 - As telas logadas saem com `Cache-Control: no-store`, e o layout logado recarrega a página no
@@ -356,6 +362,7 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 | --- | --- | --- |
 | Nome do cookie divergente entre BFF e API | Toda Sessão é recusada, mesmo com login certo | Uma variável só nas duas pontas (LLD, seção 9); teste de integração entre elas |
 | Apagar o cookie no 401 durante o render | Laço de redirecionamento ou cookie velho preso | Questão 2 resolvida: rota `GET /api/session/clear`; teste de ponta a ponta |
+| Redirect do 401 transmitido | Com `cacheComponents`, o redirect do layout vira navegação no cliente e não `307`; sem JavaScript, a limpeza não roda | Aceito: o requisito é teclado, não funcionar sem JavaScript; a rota responde `303` quando alcançada |
 | "Estado atual" do design system à frente do código | Tarefas 01 e 02 parecem prontas e não estão | Tratar as duas como trabalho novo; corrigir a tabela (questão 10) |
 | Verificação da Sessão no layout e na página | Duas renovações e duas idas à API por render | `cache()` do React por requisição (decisão 6) |
 | Snapshot OpenAPI inexistente | O contrato não tem dono no repositório | Questão 5; os testes de ponta a ponta da API fixam o comportamento atual |
@@ -373,7 +380,9 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 - [x] **2. Porta do BFF para apagar o cookie no 401.** Resolvida: `GET /api/session/clear?para=`
       valida o `para` com a mesma função do login, apaga o cookie com os atributos do LLD, seção 3,
       e leva a `/entrar` com `para` válido ou a `/entrar` sem `para` quando o valor é inválido. A
-      rota não chama a API e fica fora do proxy. Vale para as tarefas 06, 07 e 08.
+      rota não chama a API e fica fora do proxy. O redirect até a rota é transmitido e depende do
+      runtime do cliente (ver riscos); a rota em si responde `303`. Vale para as tarefas 06, 07 e
+      08.
 - [x] **3. Granularidade da revogação pelo comando.** Resolvida: `revoke-sessions` apaga todas as
       Sessões da Pessoa identificada pelo e-mail normalizado. O comando de operação conhece o
       e-mail, não o token, e a revogação por Pessoa corta o acesso de quem perdeu a conta; a
