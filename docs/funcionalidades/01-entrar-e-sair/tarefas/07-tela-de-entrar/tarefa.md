@@ -1,6 +1,6 @@
 # F01 — T07 — Tela de entrar
 
-Status: em andamento
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -35,18 +35,18 @@ sessão de quem chega com cookie.
 
 ## Critérios de aceite
 
-- [ ] **CA1** · Entrar com credencial certa chega à Home, ou à página do `para` válido.
-- [ ] **CA2** · Credencial errada e e-mail sem conta mostram a mesma mensagem e permitem tentar de
+- [x] **CA1** · Entrar com credencial certa chega à Home, ou à página do `para` válido.
+- [x] **CA2** · Credencial errada e e-mail sem conta mostram a mesma mensagem e permitem tentar de
       novo.
-- [ ] **CA3** · O bloqueio mostra quanto tempo falta e não deixa a tentativa parecer bem-sucedida.
-- [ ] **CA4** · Abrir `/entrar` com Sessão válida vai direto para a Home.
-- [ ] **CA5** · Falha de verificação mostra a porta de erro, não o formulário.
-- [ ] **CA6** · O formulário funciona por teclado e anuncia os erros de forma acessível.
-- [ ] **CA7** · A tela está de acordo com os frames Login e com a porta de erro, nos dois temas.
-- [ ] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
-- [ ] **CA9** · Abrir `/entrar` com cookie de Sessão vencida ou revogada apaga o cookie e mostra o
+- [x] **CA3** · O bloqueio mostra quanto tempo falta e não deixa a tentativa parecer bem-sucedida.
+- [x] **CA4** · Abrir `/entrar` com Sessão válida vai direto para a Home.
+- [x] **CA5** · Falha de verificação mostra a porta de erro, não o formulário.
+- [x] **CA6** · O formulário funciona por teclado e anuncia os erros de forma acessível.
+- [x] **CA7** · A tela está de acordo com os frames Login e com a porta de erro, nos dois temas.
+- [x] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
+- [x] **CA9** · Abrir `/entrar` com cookie de Sessão vencida ou revogada apaga o cookie e mostra o
       formulário.
-- [ ] **CA10** · Falha da API ao entrar mantém a Pessoa no formulário, mostra a mensagem de
+- [x] **CA10** · Falha da API ao entrar mantém a Pessoa no formulário, mostra a mensagem de
       indisponibilidade e permite tentar de novo.
 
 ## Dependências

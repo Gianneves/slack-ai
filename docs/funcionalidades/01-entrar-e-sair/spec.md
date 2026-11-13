@@ -393,7 +393,10 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
       presa na tela por uma falha da API, e o cookie some daquele navegador.
 - [ ] **9. Microtexto dos estados.** O Figma é o dono do microtexto da tela de entrar, da Home, do
       menu da Pessoa e das portas de Sessão. Confirmar os frames usados nas tarefas 07 e 08. Trava
-      só a redação final.
+      só a redação final. **Parcial na F01-T07:** sem o MCP do Figma na implementação, o
+      microtexto da tela de entrar saiu de uma referência criada no Stitch e documentada em
+      `docs/design/README.md`; a comparação com os frames Login continua pendente, e a Home e o
+      menu da Pessoa (F01-T08) seguem com o Figma como fonte.
 - [ ] **10. Correção da seção "Estado atual" do design system.** A tabela diz que os tokens, os
       componentes da F01 e as bibliotecas (Radix, CVA, Sonner) existem no código; o repositório
       atual ainda tem o esqueleto do Next. Corrigir a tabela nesta funcionalidade? Não trava o
