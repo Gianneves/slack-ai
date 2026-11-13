@@ -4,26 +4,17 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { login, logout } from "@/app/services/sessions";
 import { safeRedirectPath } from "@/app/utils/redirect-path";
+import {
+  clearedSessionCookieOptions,
+  sessionCookieOptions,
+} from "@/app/utils/session-cookie";
 import { ENV } from "@/config/env";
-
-const SESSION_COOKIE_MAX_AGE_SECONDS = 400 * 24 * 60 * 60;
 
 export type EntrarResult =
   | { status: "invalid_credentials" }
   | { status: "too_many_attempts"; retryAfterSeconds: number }
   | { status: "validation_error" }
   | { status: "unavailable" };
-
-function sessionCookieOptions() {
-  return {
-    httpOnly: true,
-    secure: ENV.SESSION_COOKIE_SECURE,
-    sameSite: "lax" as const,
-    path: "/",
-    maxAge: SESSION_COOKIE_MAX_AGE_SECONDS,
-    ...(ENV.SESSION_COOKIE_DOMAIN ? { domain: ENV.SESSION_COOKIE_DOMAIN } : {}),
-  };
-}
 
 export async function entrar(
   _previous: EntrarResult | null,
@@ -52,9 +43,6 @@ export async function sair(): Promise<void> {
 
   await logout(token);
 
-  cookieStore.set(ENV.SESSION_COOKIE_NAME, "", {
-    ...sessionCookieOptions(),
-    maxAge: 0,
-  });
+  cookieStore.set(ENV.SESSION_COOKIE_NAME, "", clearedSessionCookieOptions());
   redirect("/entrar");
 }

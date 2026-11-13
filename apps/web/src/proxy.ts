@@ -1,27 +1,32 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { safeRedirectPath } from "@/app/utils/redirect-path";
+import {
+  appendRedirectParam,
+  PATHNAME_HEADER,
+} from "@/app/utils/redirect-path";
 import { ENV } from "@/config/env";
 
 export function proxy(request: NextRequest): NextResponse {
-  if (request.cookies.has(ENV.SESSION_COOKIE_NAME)) {
-    return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  const pathname = `${request.nextUrl.pathname}${request.nextUrl.search}`;
+
+  requestHeaders.set(PATHNAME_HEADER, pathname);
+
+  if (!request.cookies.has(ENV.SESSION_COOKIE_NAME)) {
+    return NextResponse.redirect(
+      new URL(appendRedirectParam("/entrar", pathname), request.url),
+    );
   }
 
-  const para = safeRedirectPath(
-    `${request.nextUrl.pathname}${request.nextUrl.search}`,
-  );
-  const url = request.nextUrl.clone();
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
 
-  url.pathname = "/entrar";
-  url.search = "";
-  url.searchParams.set("para", para);
+  response.headers.set("Cache-Control", "no-store");
 
-  return NextResponse.redirect(url);
+  return response;
 }
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|entrar(?:$|/)|.*\\..*).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|entrar(?:$|/)|.*\\..*).*)",
   ],
 };

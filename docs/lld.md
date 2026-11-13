@@ -271,6 +271,7 @@ de eventos do WebSocket estão a definir. As rotas já decididas:
 | API do chat: `GET /v1/sessions/current` | existe | Verificar e renovar a Sessão: mesma seção |
 | API do chat: `DELETE /v1/sessions/current` | existe | Sair: mesma seção |
 | BFF: Server Actions entrar e sair | existe | Gravam e apagam o cookie: "Conceitos transversais de implementação", seção "Segurança" |
+| BFF: `GET /api/session/clear` | existe | Recebe `para`, responde `303` apagando o cookie de Sessão no 401 e leva a "Entrar": "Cliente", seção "Sessão no cliente" |
 | Envio de mensagem no BFF (Server Action) | a detalhar | Mensagem gravada e agente sem receber o pedido: "Conceitos transversais de implementação", seção "Erros" |
 
 ## 6. Estados e regras
@@ -386,14 +387,21 @@ atualiza esse cache direto, sem nova requisição.
 **Sessão no cliente.**
 
 - O proxy do Next confere só se o cookie de sessão existe; sem ele, manda para "Entrar". A
-  validação de verdade é da API do chat.
+  validação de verdade é da API do chat. O proxy também repassa o caminho pedido no cabeçalho
+  `x-pathname` e acrescenta `Cache-Control: no-store` à resposta; a rota de limpeza fica fora
+  dele.
 - O layout das telas logadas verifica a Sessão na API do chat a cada renderização:
-  - Com 401, apaga o cookie e manda para "Entrar".
+  - Com 401, redireciona para `GET /api/session/clear?para=<caminho>`, que apaga o cookie e
+    manda para "Entrar".
   - Com falha de rede, 5xx ou tempo esgotado, mostra "Não foi possível verificar sua sessão",
     com "Tentar de novo", e não manda para "Entrar".
+- Com `cacheComponents`, o `redirect()` do layout é emitido depois da casca estática e vira
+  navegação no cliente, não `307` HTTP; o `303` é da rota de limpeza. A verificação só produziria
+  um redirect HTTP se estivesse no proxy, o que o LLD não adota: o proxy fica só com a conferência
+  barata do cookie. O requisito de acessibilidade é teclado, não funcionar sem JavaScript.
 - "Entrar", aberta com cookie, faz a mesma verificação:
   - Com 200, vai para a Home.
-  - Com 401, apaga o cookie e mostra o formulário.
+  - Com 401, passa pela rota de limpeza, que apaga o cookie, e mostra o formulário.
 - Qualquer 401 vindo do BFF manda para "Entrar".
 - Um 401 no WebSocket fecha a conexão e manda para "Entrar".
 - **Voltar para onde ia:** quem é mandado para "Entrar" leva o caminho pedido em `?para=`.

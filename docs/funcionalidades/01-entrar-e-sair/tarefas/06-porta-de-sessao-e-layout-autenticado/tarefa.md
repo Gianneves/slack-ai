@@ -1,6 +1,6 @@
 # F01 — T06 — Porta de sessão e layout autenticado
 
-Status: a fazer
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -19,12 +19,15 @@ renderiza a tela com Sessão válida.
 - O nome do cookie de Sessão vem da tarefa 03.
 - O contrato de verificação (200, 401 e falha) e a validação do `?para=` vêm da tarefa 05.
 - Os componentes de UI da porta de erro vêm da tarefa 02.
+- A porta de limpeza do cookie no 401 é a rota `GET /api/session/clear?para=`, da questão em
+  aberto 2 resolvida.
 
 ## Escopo
 
 - Verificação da Sessão com o `cache()` do React, uma vez por requisição, reutilizando o serviço
   da tarefa 05; o resultado é discriminado em autenticada, não autenticada e indisponível.
-- Porta para apagar o cookie no 401, conforme a decisão da questão em aberto 2.
+- Porta para apagar o cookie no 401: rota `GET /api/session/clear?para=`, que valida o `para`,
+  apaga o cookie e leva a `/entrar`.
 - `src/app/components/session/` com a porta de erro: mensagem de que não foi possível verificar a
   sessão, "Tentar de novo" e nenhum redirecionamento para entrar por causa da falha.
 - Layout autenticado em Server Component, no grupo de rotas logadas: verifica a Sessão em toda
@@ -38,19 +41,19 @@ renderiza a tela com Sessão válida.
 
 ## Critérios de aceite
 
-- [ ] **CA1** · Uma Sessão válida renderiza a tela logada, e a Pessoa vem da verificação.
-- [ ] **CA2** · Uma Sessão vencida ou revogada apaga o cookie e leva a `/entrar?para=<caminho>` na
+- [x] **CA1** · Uma Sessão válida renderiza a tela logada, e a Pessoa vem da verificação.
+- [x] **CA2** · Uma Sessão vencida ou revogada apaga o cookie e leva a `/entrar?para=<caminho>` na
       renderização seguinte.
-- [ ] **CA3** · Falha de rede, 5xx ou tempo esgotado mostra a porta de erro e não leva a entrar.
-- [ ] **CA4** · A verificação acontece uma vez por requisição, mesmo sendo usada pelo layout e
+- [x] **CA3** · Falha de rede, 5xx ou tempo esgotado mostra a porta de erro e não leva a entrar.
+- [x] **CA4** · A verificação acontece uma vez por requisição, mesmo sendo usada pelo layout e
       pela página.
-- [ ] **CA5** · A porta de erro é a mesma consumida pela tela de entrar, sem duplicação.
-- [ ] **CA6** · As telas logadas saem com `Cache-Control: no-store`, e voltar pelo histórico não
+- [x] **CA5** · A porta de erro é a mesma consumida pela tela de entrar, sem duplicação.
+- [x] **CA6** · As telas logadas saem com `Cache-Control: no-store`, e voltar pelo histórico não
       mostra conteúdo de Sessão encerrada.
-- [ ] **CA7** · A porta de erro funciona por teclado e anuncia a falha de forma acessível.
-- [ ] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
+- [x] **CA7** · A porta de erro funciona por teclado e anuncia a falha de forma acessível.
+- [x] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
 
 ## Dependências
 
-Tarefas 02 e 05. A questão em aberto 2 precisa estar resolvida antes do plano. As tarefas 07 e 08
-dependem desta porta.
+Tarefas 02 e 05. A questão em aberto 2 está resolvida pela rota `GET /api/session/clear?para=`. As
+tarefas 07 e 08 dependem desta porta.
