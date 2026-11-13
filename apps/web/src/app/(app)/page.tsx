@@ -9,9 +9,8 @@ async function HomeContent() {
   }
 
   return (
-    <main className="flex min-h-svh flex-col items-center justify-center gap-1 p-6 text-center">
+    <main className="flex min-h-svh items-center justify-center p-6 text-center">
       <h1 className="text-title font-black text-fg">{session.person.name}</h1>
-      <p className="text-small text-fg-muted">{session.person.email}</p>
     </main>
   );
 }

@@ -45,6 +45,43 @@ da F01-T08.
 3. Repita no navegador: a tela logada mostra a porta de erro e continua na Home.
 4. Suba o `chat-api` e ative "Tentar de novo": a Home volta a renderizar a Pessoa.
 
+### 5xx
+
+1. Com o `chat-api` parado, suba um dublê que responde `500` no lugar dele, dentro do contêiner
+   `web`, e uma segunda instância da web apontando para o dublê:
+
+   ```bash
+   docker compose -f compose.yaml exec -d web node -e \
+     'require("http").createServer((_, res) => { res.statusCode = 500; res.end("erro") }).listen(9999)'
+   docker compose -f compose.yaml exec -d web sh -c \
+     'CHAT_API_URL=http://127.0.0.1:9999 pnpm start -p 3002 > /tmp/web500.log 2>&1'
+   ```
+
+2. Confira a porta de erro na instância de teste:
+
+   ```bash
+   docker compose -f compose.yaml exec web sh -c \
+     'curl -s -H "Cookie: session=<token>" http://127.0.0.1:3002/'
+   ```
+
+   Esperado: o mesmo `unavailable` de CA3, com "Não foi possível verificar sua sessão" e
+   "Tentar de novo", sem redirecionamento para `/entrar`.
+
+3. Limpe a instância de teste e o dublê (`pkill -f "listen.9999."` e `pkill -f "next start.*3002"`).
+
+### Tempo esgotado
+
+1. Troque o dublê por um que só responde depois de 8 segundos:
+
+   ```bash
+   docker compose -f compose.yaml exec -d web node -e \
+     'require("http").createServer((_, res) => setTimeout(() => res.end("{}"), 8000)).listen(9999)'
+   ```
+
+2. Peça a Home na instância de teste e meça o tempo: a resposta chega em cerca de 5 segundos (o
+   `AbortSignal.timeout(5000)` de `services/sessions.ts`) e mostra a mesma porta de erro.
+3. Limpe a instância de teste e o dublê.
+
 ## CA6 — sem cache e sem bfcache depois de sair
 
 1. Com o `chat-api` no ar e uma Sessão válida, inspecione a resposta da Home:
@@ -66,13 +103,15 @@ da F01-T08.
 2. Percorra a tela só pelo teclado, com Tab: alcance "Tentar de novo" com foco visível e ative com
    Enter.
 3. Confira que a falha é anunciada: o contêiner da porta de erro tem `role="alert"`.
-4. Rode o axe no estado de erro (a suíte da F01-T09 usa `@axe-core/playwright`): nenhuma violação.
+4. Rode o axe no estado de erro (a suíte da F01-T09 usa `@axe-core/playwright`, porque a web ainda
+   não tem infraestrutura de teste nesta tarefa): nenhuma violação.
 
 ## Resultado das conferências por `curl`
 
 - `GET /` com Sessão válida: `200`, `Cache-Control: no-store` e "Pessoa T06" no corpo.
-- `GET /` com token inválido: verificação não autenticada, redirecionamento para
-  `/api/session/clear?para=%2F`.
+- `GET /` com token inválido: verificação não autenticada. O Next emite o redirecionamento para
+  `/api/session/clear?para=%2F` na resposta transmitida (`NEXT_REDIRECT`); a rota de limpeza faz o
+  `303` e apaga o cookie.
 - `GET /api/session/clear?para=%2Fcanais%3Fx%3D1`: `303`, `Location:
   /entrar?para=%2Fcanais%3Fx%3D1`, `Set-Cookie: session=; Path=/; Max-Age=0; HttpOnly;
   SameSite=lax` e `Cache-Control: no-store`.
@@ -80,3 +119,5 @@ da F01-T08.
   tratado como ausente.
 - `GET /` com o `chat-api` parado: `200`, "Não foi possível verificar sua sessão", "Tentar de
   novo" e `role="alert"`, sem redirecionamento.
+- `GET /` com o dublê de `500` e com o dublê que responde em 8 segundos: a mesma porta de erro;
+  no segundo caso, a resposta chega em cerca de 5 segundos.

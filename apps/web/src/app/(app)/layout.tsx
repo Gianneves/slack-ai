@@ -5,9 +5,9 @@ export const instant = false;
 
 export default function AuthenticatedLayout({ children }: LayoutProps<"/">) {
   return (
-    <>
+    <SessionBoundary>
       <BfcacheReload />
-      <SessionBoundary>{children}</SessionBoundary>
-    </>
+      {children}
+    </SessionBoundary>
   );
 }

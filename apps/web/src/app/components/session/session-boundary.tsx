@@ -2,16 +2,18 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { clearSessionUrl, getSession } from "@/app/queries/session";
-import { safeRedirectPath } from "@/app/utils/redirect-path";
+import {
+  PATHNAME_HEADER,
+  safeRedirectPath,
+} from "@/app/utils/redirect-path";
 import { SessionError } from "./session-error";
-
-const PATHNAME_HEADER = "x-pathname";
 
 export async function SessionBoundary({ children }: { children: ReactNode }) {
   const session = await getSession();
 
   if (session.status === "unauthenticated") {
     const requestHeaders = await headers();
+
     redirect(clearSessionUrl(requestHeaders.get(PATHNAME_HEADER)));
   }
 
