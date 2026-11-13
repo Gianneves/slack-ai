@@ -1,15 +1,14 @@
+export function isSafeRedirectPath(
+  value: string | null | undefined,
+): value is string {
+  return (
+    typeof value === "string" &&
+    value.startsWith("/") &&
+    !value.startsWith("//") &&
+    !value.includes("\\")
+  );
+}
+
 export function safeRedirectPath(value: string | null | undefined): string {
-  if (typeof value !== "string") {
-    return "/";
-  }
-
-  if (
-    !value.startsWith("/") ||
-    value.startsWith("//") ||
-    value.includes("\\")
-  ) {
-    return "/";
-  }
-
-  return value;
+  return isSafeRedirectPath(value) ? value : "/";
 }
