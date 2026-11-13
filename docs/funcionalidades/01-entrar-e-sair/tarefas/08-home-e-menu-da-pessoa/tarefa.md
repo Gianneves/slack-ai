@@ -1,6 +1,6 @@
 # F01 — T08 — Home e menu da Pessoa
 
-Status: a fazer
+Status: em andamento
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -19,15 +19,17 @@ Entregar a Home / Vazio dentro do layout autenticado e o menu da Pessoa com Sair
 
 ## Escopo
 
-- `src/app/page.tsx` com o frame Home / Vazio, usando `Rail`, `Sidebar`, `EmptyState` e o menu da
-  Pessoa; nenhum item de navegação de outra funcionalidade ganha rota nesta tarefa.
+- `src/app/(app)/page.tsx` com a tela Home / Vazio da referência de design, usando `Rail`,
+  `Sidebar`, `EmptyState` e o menu da Pessoa; nenhum item de navegação de outra funcionalidade ganha
+  rota nesta tarefa.
 - `src/app/components/workspace-nav/` com Rail e Sidebar, e `src/app/components/user/` com o
   UserMenu e a ação Sair.
 - Sair usa a Server Action da tarefa 05: encerra a Sessão daquele navegador e leva a `/entrar`,
   sem afetar as outras Sessões da Pessoa.
 - O layout autenticado, as proteções de cache e a porta de erro ficam na tarefa 06; esta tarefa
   só preenche o conteúdo da tela.
-- Textos do frame Home / Vazio e do menu da Pessoa no Figma; temas claro e escuro.
+- Textos da referência de design da Home / Vazio e do menu da Pessoa, em `docs/design/home/`; temas
+  claro e escuro.
 
 ## Critérios de aceite
 
