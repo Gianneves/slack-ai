@@ -1,4 +1,10 @@
-# Design da tela de entrar
+# Design das telas da F01
+
+As referências visuais desta pasta foram criadas no Stitch porque o MCP do Figma não estava
+disponível nas sessões de implementação. A tela de entrar está descrita abaixo; a Home e o menu da
+Pessoa, em [`home/README.md`](home/README.md).
+
+## Tela de entrar
 
 Fonte de referência visual da tela `/entrar` da F01-T07, criada nesta tarefa no Stitch porque o
 MCP do Figma não estava disponível na sessão de implementação. O Figma continua sendo a fonte de
