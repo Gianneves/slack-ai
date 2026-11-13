@@ -1,6 +1,6 @@
 # F01 — T06 — Porta de sessão e layout autenticado
 
-Status: em andamento
+Status: concluída
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -41,17 +41,17 @@ renderiza a tela com Sessão válida.
 
 ## Critérios de aceite
 
-- [ ] **CA1** · Uma Sessão válida renderiza a tela logada, e a Pessoa vem da verificação.
-- [ ] **CA2** · Uma Sessão vencida ou revogada apaga o cookie e leva a `/entrar?para=<caminho>` na
+- [x] **CA1** · Uma Sessão válida renderiza a tela logada, e a Pessoa vem da verificação.
+- [x] **CA2** · Uma Sessão vencida ou revogada apaga o cookie e leva a `/entrar?para=<caminho>` na
       renderização seguinte.
-- [ ] **CA3** · Falha de rede, 5xx ou tempo esgotado mostra a porta de erro e não leva a entrar.
-- [ ] **CA4** · A verificação acontece uma vez por requisição, mesmo sendo usada pelo layout e
+- [x] **CA3** · Falha de rede, 5xx ou tempo esgotado mostra a porta de erro e não leva a entrar.
+- [x] **CA4** · A verificação acontece uma vez por requisição, mesmo sendo usada pelo layout e
       pela página.
-- [ ] **CA5** · A porta de erro é a mesma consumida pela tela de entrar, sem duplicação.
-- [ ] **CA6** · As telas logadas saem com `Cache-Control: no-store`, e voltar pelo histórico não
+- [x] **CA5** · A porta de erro é a mesma consumida pela tela de entrar, sem duplicação.
+- [x] **CA6** · As telas logadas saem com `Cache-Control: no-store`, e voltar pelo histórico não
       mostra conteúdo de Sessão encerrada.
-- [ ] **CA7** · A porta de erro funciona por teclado e anuncia a falha de forma acessível.
-- [ ] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
+- [x] **CA7** · A porta de erro funciona por teclado e anuncia a falha de forma acessível.
+- [x] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
 
 ## Dependências
 

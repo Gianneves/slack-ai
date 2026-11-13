@@ -271,7 +271,7 @@ de eventos do WebSocket estão a definir. As rotas já decididas:
 | API do chat: `GET /v1/sessions/current` | existe | Verificar e renovar a Sessão: mesma seção |
 | API do chat: `DELETE /v1/sessions/current` | existe | Sair: mesma seção |
 | BFF: Server Actions entrar e sair | existe | Gravam e apagam o cookie: "Conceitos transversais de implementação", seção "Segurança" |
-| BFF: `GET /api/session/clear` | planejada | Recebe `para`, apaga o cookie de Sessão no 401 e leva a "Entrar": "Cliente", seção "Sessão no cliente" |
+| BFF: `GET /api/session/clear` | existe | Recebe `para`, apaga o cookie de Sessão no 401 e leva a "Entrar": "Cliente", seção "Sessão no cliente" |
 | Envio de mensagem no BFF (Server Action) | a detalhar | Mensagem gravada e agente sem receber o pedido: "Conceitos transversais de implementação", seção "Erros" |
 
 ## 6. Estados e regras
