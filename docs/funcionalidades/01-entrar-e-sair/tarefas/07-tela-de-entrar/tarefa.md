@@ -1,6 +1,6 @@
 # F01 — T07 — Tela de entrar
 
-Status: a fazer
+Status: em andamento
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)
@@ -44,6 +44,10 @@ sessão de quem chega com cookie.
 - [ ] **CA6** · O formulário funciona por teclado e anuncia os erros de forma acessível.
 - [ ] **CA7** · A tela está de acordo com os frames Login e com a porta de erro, nos dois temas.
 - [ ] **CA8** · `pnpm lint`, `pnpm exec tsc --noEmit` e `pnpm build` passam.
+- [ ] **CA9** · Abrir `/entrar` com cookie de Sessão vencida ou revogada apaga o cookie e mostra o
+      formulário.
+- [ ] **CA10** · Falha da API ao entrar mantém a Pessoa no formulário, mostra a mensagem de
+      indisponibilidade e permite tentar de novo.
 
 ## Dependências
 
