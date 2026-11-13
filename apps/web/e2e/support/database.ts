@@ -23,31 +23,23 @@ export async function expireSessionByToken(token: string): Promise<void> {
 }
 
 export async function deleteTestDataByEmail(email: string): Promise<void> {
-  await deleteSessionsOf(`SELECT id FROM people WHERE email = $1`, [email]);
-  await pool.query("DELETE FROM login_attempts WHERE email = $1", [email]);
-  await pool.query("DELETE FROM people WHERE email = $1", [email]);
+  await deleteTestData("email = $1", [email]);
 }
 
 export async function deleteTestDataByPrefix(): Promise<void> {
-  await deleteSessionsOf(`SELECT id FROM people WHERE email LIKE $1`, [
-    TEST_EMAIL_PATTERN,
-  ]);
-  await pool.query("DELETE FROM login_attempts WHERE email LIKE $1", [
-    TEST_EMAIL_PATTERN,
-  ]);
-  await pool.query("DELETE FROM people WHERE email LIKE $1", [
-    TEST_EMAIL_PATTERN,
-  ]);
+  await deleteTestData("email LIKE $1", [TEST_EMAIL_PATTERN]);
 }
 
-async function deleteSessionsOf(
-  peopleQuery: string,
+async function deleteTestData(
+  condition: string,
   values: string[],
 ): Promise<void> {
   await pool.query(
-    `DELETE FROM sessions WHERE person_id IN (${peopleQuery})`,
+    `DELETE FROM sessions WHERE person_id IN (SELECT id FROM people WHERE ${condition})`,
     values,
   );
+  await pool.query(`DELETE FROM login_attempts WHERE ${condition}`, values);
+  await pool.query(`DELETE FROM people WHERE ${condition}`, values);
 }
 
 export async function closeDatabase(): Promise<void> {

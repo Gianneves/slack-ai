@@ -3,9 +3,8 @@ import { expireSessionByToken } from "./support/database";
 import { expect, test } from "./support/fixtures";
 import {
   fillAndSubmitLogin,
-  homeTitle,
+  homeHeading,
   readSessionToken,
-  saveStorageState,
   sessionCookie,
   signIn,
 } from "./support/session";
@@ -28,6 +27,9 @@ test("entrar grava o cookie de Sessão com os atributos do LLD e leva à Home", 
   const expiresInSeconds = (cookie?.expires ?? 0) - Date.now() / 1000;
   expect(expiresInSeconds).toBeGreaterThan(
     COOKIE_MAX_AGE_SECONDS - ONE_DAY_SECONDS,
+  );
+  expect(expiresInSeconds).toBeLessThan(
+    COOKIE_MAX_AGE_SECONDS + ONE_DAY_SECONDS,
   );
 });
 
@@ -53,7 +55,7 @@ test("sair apaga o cookie, leva a /entrar e mantém a outra Sessão", async ({
     expect(await sessionCookie(page.context())).toBeNull();
 
     await otherPage.goto("/");
-    await expect(homeTitle(otherPage)).toBeVisible();
+    await expect(homeHeading(otherPage)).toBeVisible();
   } finally {
     await otherContext.close();
   }
@@ -71,7 +73,7 @@ test("leva à Home quando o para é inválido ou começa com //", async ({
     try {
       await page.goto(`/entrar?para=${encodeURIComponent(para)}`);
       await fillAndSubmitLogin(page, person);
-      await expect(homeTitle(page)).toBeVisible();
+      await expect(homeHeading(page)).toBeVisible();
       expect(new URL(page.url()).pathname).toBe("/");
     } finally {
       await context.close();
@@ -97,7 +99,7 @@ test("Sessão válida renderiza a Home com a Pessoa da verificação", async ({
 }) => {
   await signIn(page, person);
 
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
   await expect(
     page.getByRole("button", { name: `Menu de ${person.name}` }),
   ).toBeVisible();
@@ -141,20 +143,20 @@ test("recarregar, abrir outra aba e reabrir em contexto novo mantêm a Sessão",
   await signIn(page, person);
 
   await page.reload();
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
 
   const anotherTab = await page.context().newPage();
   await anotherTab.goto("/");
-  await expect(homeTitle(anotherTab)).toBeVisible();
+  await expect(homeHeading(anotherTab)).toBeVisible();
   await anotherTab.close();
 
-  const storageState = await saveStorageState(page.context());
+  const storageState = await page.context().storageState();
   const reopened = await browser.newContext({ baseURL, storageState });
   const reopenedPage = await reopened.newPage();
 
   try {
     await reopenedPage.goto("/");
-    await expect(homeTitle(reopenedPage)).toBeVisible();
+    await expect(homeHeading(reopenedPage)).toBeVisible();
   } finally {
     await reopened.close();
   }

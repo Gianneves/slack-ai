@@ -5,7 +5,7 @@ import { deleteTestDataByEmail } from "./support/database";
 import { expect, test } from "./support/fixtures";
 import {
   fillAndSubmitLogin,
-  homeTitle,
+  homeHeading,
   sessionCookie,
   signIn,
 } from "./support/session";
@@ -47,7 +47,7 @@ test("entra com credencial válida e chega à Home", async ({ page, person }) =>
   await fillAndSubmitLogin(page, person);
 
   await expect(page).toHaveURL(/\/$/);
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
   expect(await sessionCookie(page.context())).not.toBeNull();
 });
 
@@ -58,7 +58,7 @@ test("entra e volta ao caminho do para válido", async ({ page, person }) => {
   await fillAndSubmitLogin(page, person);
 
   await expect(page).toHaveURL(/\/\?de=canal$/);
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
 });
 
 test("credencial errada e e-mail sem conta mostram a mesma mensagem e permitem tentar de novo", async ({
@@ -80,7 +80,7 @@ test("credencial errada e e-mail sem conta mostram a mesma mensagem e permitem t
   );
 
   await fillAndSubmitLogin(page, person);
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
 
   await deleteTestDataByEmail(missingAccount);
 });
@@ -117,7 +117,7 @@ test("abrir /entrar com Sessão válida vai para a Home", async ({
   await page.goto("/entrar");
 
   await expect(page).toHaveURL(/\/$/);
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
 });
 
 test("formulário funciona por teclado e anuncia o erro", async ({
@@ -148,7 +148,7 @@ test("formulário funciona por teclado e anuncia o erro", async ({
   await page.getByLabel("Senha").fill(person.password);
   await page.keyboard.press("Enter");
 
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
 });
 
 test("Sessão recusada em /entrar apaga o cookie e mostra o formulário", async ({

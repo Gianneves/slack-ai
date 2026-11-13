@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "./support/fixtures";
-import { homeTitle, sessionCookie, signIn } from "./support/session";
+import { homeHeading, sessionCookie, signIn } from "./support/session";
 
 test("Home renderiza a casca autenticada com a Pessoa da Sessão", async ({
   page,
@@ -15,7 +15,7 @@ test("Home renderiza a casca autenticada com a Pessoa da Sessão", async ({
     page.getByRole("navigation", { name: "Navegação do workspace" }),
   ).toBeVisible();
   await expect(page.getByText("Full Cycle Chat", { exact: true })).toBeVisible();
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
   await expect(
     page.getByRole("button", { name: `Menu de ${person.name}` }),
   ).toBeVisible();

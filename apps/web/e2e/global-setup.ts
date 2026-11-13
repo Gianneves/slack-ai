@@ -44,7 +44,6 @@ async function waitForStatus(
 }
 
 export default async function globalSetup(): Promise<void> {
-  await deleteTestDataByPrefix();
   await ensureAccountsBuild();
   await waitForStatus(
     `${API_URL}/v1/sessions/current`,
@@ -52,4 +51,5 @@ export default async function globalSetup(): Promise<void> {
     "A API do chat",
   );
   await waitForStatus(`${WEB_URL}/entrar`, 200, "A web");
+  await deleteTestDataByPrefix();
 }

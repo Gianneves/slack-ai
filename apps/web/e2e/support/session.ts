@@ -4,7 +4,7 @@ export const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME ?? "session";
 
 export const HOME_TITLE = "Bem-vindo ao Full Cycle Chat";
 
-export function homeTitle(page: Page) {
+export function homeHeading(page: Page) {
   return page.getByRole("heading", { name: HOME_TITLE });
 }
 
@@ -28,7 +28,7 @@ export async function signIn(
 ): Promise<void> {
   await page.goto("/entrar");
   await fillAndSubmitLogin(page, person);
-  await expect(homeTitle(page)).toBeVisible();
+  await expect(homeHeading(page)).toBeVisible();
 }
 
 export async function sessionCookie(context: BrowserContext) {
@@ -47,8 +47,4 @@ export async function readSessionToken(page: Page): Promise<string> {
   }
 
   return cookie.value;
-}
-
-export async function saveStorageState(context: BrowserContext) {
-  return context.storageState();
 }

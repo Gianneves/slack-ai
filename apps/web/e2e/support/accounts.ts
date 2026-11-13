@@ -23,10 +23,6 @@ function uniqueId(): string {
   return randomUUID();
 }
 
-export function uniqueEmail(): string {
-  return `${TEST_PREFIX}${uniqueId()}@${TEST_DOMAIN}`;
-}
-
 export function unregisteredEmail(): string {
   return `${TEST_PREFIX}sem-conta-${uniqueId()}@${TEST_DOMAIN}`;
 }
