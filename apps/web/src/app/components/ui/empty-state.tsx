@@ -2,9 +2,12 @@ import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/app/utils/cn";
 
+type EmptyStateTitle = "p" | "h1";
+
 type EmptyStateProps = {
   icon: LucideIcon;
   title: string;
+  titleAs?: EmptyStateTitle;
   description?: ReactNode;
   action?: ReactNode;
   compact?: boolean;
@@ -18,6 +21,7 @@ export function EmptyState({
   action,
   compact,
   className,
+  titleAs: Title = "p",
 }: EmptyStateProps) {
   return (
     <div
@@ -31,7 +35,7 @@ export function EmptyState({
         <Icon size={24} aria-hidden />
       </span>
       <div className="flex flex-col gap-1">
-        <p className="text-title font-black text-fg">{title}</p>
+        <Title className="text-title font-black text-fg">{title}</Title>
         {description ? <p className="text-small text-fg-muted">{description}</p> : null}
       </div>
       {action}

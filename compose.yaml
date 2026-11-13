@@ -47,6 +47,23 @@ services:
     ports:
       - "8333:8333"
 
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.65.0-noble
+    profiles: ["e2e"]
+    command: tail -f /dev/null
+    volumes:
+      - .:/home/node/app
+    working_dir: /home/node/app
+    user: "1000:1000"
+    environment:
+      HOME: /tmp
+      DATABASE_URL: postgresql://chat:chat@postgres:5432/chat
+      SESSION_COOKIE_NAME: session
+      PLAYWRIGHT_HTML_OPEN: never
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   postgres-data:
   s3-data:

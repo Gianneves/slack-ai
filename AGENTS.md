@@ -27,7 +27,7 @@ Cada projeto tem o próprio `AGENTS.md`, com os comandos, as particularidades da
 
 Tudo roda dentro dos contêineres do Docker Compose: instalação de dependências, servidor de desenvolvimento, testes, lint, compilação do TypeScript e qualquer outro comando do projeto. **Nunca rode `pnpm`, `node` ou `npx` direto na máquina.**
 
-O ambiente de desenvolvimento usa o `compose.yaml`, na raiz, com quatro serviços:
+O ambiente de desenvolvimento usa o `compose.yaml`, na raiz, com cinco serviços:
 
 | Serviço | O que é | Endereço na máquina | Endereço entre contêineres |
 | --- | --- | --- | --- |
@@ -35,8 +35,11 @@ O ambiente de desenvolvimento usa o `compose.yaml`, na raiz, com quatro serviço
 | `chat-api` | API em NestJS, REST e WebSocket | `http://localhost:3001` | `http://chat-api:3000` |
 | `postgres` | PostgreSQL, com os bancos `chat`, `agents` e `business` | `localhost:5432` | `postgres:5432` |
 | `s3` | Emulador do S3 (`seaweedfs`) | `http://localhost:8333` | `http://s3:8333` |
+| `e2e` | Testes de ponta a ponta do `web`, com Playwright | — | `http://web:3000` |
 
 Os contêineres `web` e `chat-api` instalam as dependências ao subir e depois ficam parados, sem iniciar a aplicação. Os comandos rodam neles com `docker compose -f compose.yaml exec <serviço> <comando>` e os de cada projeto estão no `AGENTS.md` dele.
+
+O `e2e` sobe só pelo `profile` e fica parado, como `web` e `chat-api`; os comandos dele estão no `apps/web/AGENTS.md`.
 
 ### Subir e derrubar
 
@@ -44,9 +47,10 @@ Os contêineres `web` e `chat-api` instalam as dependências ao subir e depois f
 docker compose -f compose.yaml up -d --build --wait
 docker compose -f compose.yaml exec web pnpm dev --hostname 0.0.0.0
 docker compose -f compose.yaml exec chat-api pnpm start:dev
+docker compose -f compose.yaml --profile e2e up -d --wait e2e
 ```
 
-O `--wait` segura o primeiro comando só até o `postgres` e o `s3` ficarem prontos. A instalação das dependências continua dentro de `web` e `chat-api` depois disso e, na primeira subida, leva alguns minutos: acompanhe com `docker compose -f compose.yaml logs -f <serviço>` antes de rodar os outros dois. As migrações não rodam na subida. Os outros dois ficam presos ao terminal, então rode cada um em segundo plano. O `--hostname 0.0.0.0` é necessário para que a web aceite conexões de fora do contêiner.
+O `--wait` segura o primeiro comando só até o `postgres` e o `s3` ficarem prontos. A instalação das dependências continua dentro de `web` e `chat-api` depois disso e, na primeira subida, leva alguns minutos: acompanhe com `docker compose -f compose.yaml logs -f <serviço>` antes de rodar os outros dois. As migrações não rodam na subida. Os dois comandos do meio ficam presos ao terminal, então rode cada um em segundo plano. O `--hostname 0.0.0.0` é necessário para que a web aceite conexões de fora do contêiner. O último sobe o `e2e` só quando os testes de ponta a ponta vão rodar; ele não inicia a aplicação.
 
 **Derrubar**
 

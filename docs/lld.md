@@ -370,8 +370,8 @@ quando apresentadas ("Estados e regras", seção "Sessão e login") e pela opera
 
 | Rota | Acesso | Lê | Ações | Situação |
 | --- | --- | --- | --- | --- |
-| `/entrar` | Público | Sessão, quando há cookie | Entrar com e-mail e senha | planejada |
-| `/` (Home) | Sessão | Pessoa da Sessão | Sair | planejada |
+| `/entrar` | Público | Sessão, quando há cookie | Entrar com e-mail e senha | existe |
+| `/` (Home) | Sessão | Pessoa da Sessão | Sair | existe |
 | A definir | Sessão | Histórico da conversa | Enviar, editar, apagar, citar; "digitando"; botões de resposta pronta | a detalhar |
 | A definir (lateral) | Sessão | Conversas, com não lidas e menções | Abrir conversa | a detalhar |
 | A definir | Sessão | Atividade: Menções, DMs, Tarefas | Abrir a mensagem; concluir e reabrir tarefa | a detalhar |
@@ -475,7 +475,7 @@ substitui cada serviço de produção segue o HLD, seção 9, "Implantação e a
 | `chat-api` | `apps/chat-api/Dockerfile.dev` (Node 26, pnpm 11) | 3001 (3000 no contêiner) | API do chat |
 | `postgres` | `postgres:18` | 5432 | Banco do chat, dos agentes e de negócio |
 | `s3` | `chrislusf/seaweedfs:4.52` (`weed mini`) | 8333 | Substituto do armazenamento compatível com S3, com o bucket `reports` |
-| `e2e` (planejado) | Imagem oficial do Playwright, na mesma versão do `@playwright/test` do `web` | — | Roda os testes de ponta a ponta do `web` contra `http://web:3000` e o `playwright-cli`; sobe só pelo `profile` e fica parado, como `web` e `chat-api` |
+| `e2e` | Imagem oficial do Playwright, na mesma versão do `@playwright/test` do `web` | — | Roda os testes de ponta a ponta do `web` contra `http://web:3000` e o `playwright-cli`; sobe só pelo `profile` e fica parado, como `web` e `chat-api` |
 
 Entram depois: o Redis, quando o primeiro uso dele for implementado, e os serviços `agents` e
 `worker`, quando `apps/agents` existir.
@@ -524,6 +524,10 @@ usuário conecta num banco que não é o seu. Senhas iguais ao nome do usuário,
   mesmo contêiner. O `playwright-cli` é o do `@playwright/test` instalado no `web`, sem instalação
   global, e o relatório HTML não abre sozinho (`PLAYWRIGHT_HTML_OPEN=never` no ambiente do
   serviço).
+- **Origem do `web` no `next dev`:** o navegador do contêiner `e2e` abre a web como `web:3000`, e o
+  `next dev` bloqueia os recursos de desenvolvimento vindos de uma origem fora de `localhost`. O
+  `next.config.ts` da web permite a origem `web` em `allowedDevOrigins`; sem isso, o cliente de
+  desenvolvimento não hidrata e o formulário de entrar é enviado como documento.
 - **Dados dos testes da web:** o Playwright roda contra o ambiente de desenvolvimento, no banco
   `chat`. Cada teste cria a própria Pessoa, com e-mail de prefixo `e2e-` no domínio `teste.local`,
   e as Pessoas de teste ficam no banco até serem apagadas pelo prefixo ou por um `down -v`.

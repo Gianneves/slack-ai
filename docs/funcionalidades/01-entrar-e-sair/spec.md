@@ -66,7 +66,10 @@ não os repete.
    Sessões, redefinir a senha e limpar Sessões vencidas); papéis e permissões ficam em F08 e F14.
 9. **A interface segue o design system.** Tokens, tipografia, raios, elevação e componentes saem
    de `docs/design-system.md`; os textos saem dos frames do Figma (Login, Home / Vazio, menu da
-   Pessoa e portas de Sessão). As bibliotecas são instaladas quando o primeiro componente
+   Pessoa e portas de Sessão). Sem o MCP do Figma nas implementações das tarefas 07 e 08, a tela de
+   entrar e a Home com o menu da Pessoa usam as referências criadas no Stitch e documentadas em
+   `docs/design/README.md` e `docs/design/home/README.md`, até a comparação com os frames ser
+   feita (questão em aberto 9). As bibliotecas são instaladas quando o primeiro componente
    precisar delas, sempre no contêiner. A seção "Estado atual" do design system diz que os tokens
    e os componentes da F01 já existem no código, mas o repositório atual ainda tem o esqueleto do
    Next; ver a questão em aberto 10.
@@ -122,7 +125,7 @@ não os repete.
 | `src/config/env.ts` | planejada | schema zod das variáveis da web |
 | `src/proxy.ts` | planejada | conferência da existência do cookie (Next 16 chama o antigo middleware de proxy) |
 | `e2e/` e `playwright.config.ts` | planejada | testes de ponta a ponta, Chromium headless e axe, com a skill `playwright-cli` na escrita e na depuração |
-| `package.json` | existe | `zod`, `lucide-react`, `radix-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`, `@playwright/test` e `@axe-core/playwright` |
+| `package.json` | existe | `zod`, `lucide-react`, `radix-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`, `@playwright/test`, `@axe-core/playwright`, `pg` e `@types/pg` |
 | `AGENTS.md` | existe | comandos de e2e e o uso da skill `playwright-cli` |
 | `compose.yaml` (raiz) | existe | serviço `e2e` com `profile`, como o LLD, seção 10, planeja |
 
@@ -348,7 +351,9 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 - A falha de verificação (rede, 5xx ou tempo esgotado) acontece no servidor do BFF, fora do
   alcance do roteamento do Playwright; ela fica num roteiro manual, com o `chat-api` parado e a
   web no ar.
-- A criação e a revogação de Pessoas nos testes dependem da questão em aberto 4.
+- A criação e a revogação de Pessoas nos testes usam o comando de contas da tarefa 04, executado
+  dentro do contêiner `e2e`; a Sessão vencida e a limpeza por prefixo usam `pg`, como a questão 4
+  decidiu.
 
 ### Manual
 
@@ -387,8 +392,11 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
       Sessões da Pessoa identificada pelo e-mail normalizado. O comando de operação conhece o
       e-mail, não o token, e a revogação por Pessoa corta o acesso de quem perdeu a conta; a
       decisão vale para a tarefa 04 e o roteiro manual.
-- [ ] **4. Como o Playwright cria e revoga Pessoas.** Rodar a operação do comando de contas dentro
-      do contêiner `e2e`, ou usar SQL e um hash pronto? Trava a tarefa 09.
+- [x] **4. Como o Playwright cria e revoga Pessoas.** Resolvida: a criação e a revogação usam o
+      comando de contas da tarefa 04, executado no contêiner `e2e` sobre o `dist` do `chat-api`
+      construído no `globalSetup` da suíte. O `pg` entra como dependência de teste só para o que
+      nenhuma operação expõe: montar a Sessão vencida e apagar as linhas `e2e-…@teste.local` de
+      `sessions`, `login_attempts` e `people` por prefixo. A decisão vale para a tarefa 09.
 - [ ] **5. Dono do snapshot OpenAPI.** O LLD diz que o snapshot é o dono do contrato, mas ele não
       existe. A infraestrutura do `@nestjs/swagger` entra nesta funcionalidade ou numa tarefa de
       contrato separada? Trava o dono do contrato, não o código da F01.
@@ -402,8 +410,17 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
       presa na tela por uma falha da API, e o cookie some daquele navegador.
 - [ ] **9. Microtexto dos estados.** O Figma é o dono do microtexto da tela de entrar, da Home, do
       menu da Pessoa e das portas de Sessão. Confirmar os frames usados nas tarefas 07 e 08. Trava
-      só a redação final.
+      só a redação final. **Parcial nas F01-T07 e F01-T08:** sem o MCP do Figma nas
+      implementações, o microtexto da tela de entrar saiu de uma referência criada no Stitch e
+      documentada em `docs/design/README.md`, e o da Home e do menu da Pessoa, de outra referência
+      documentada em `docs/design/home/README.md`; a comparação com os frames Login, Home / Vazio e
+      menu da Pessoa continua pendente.
 - [ ] **10. Correção da seção "Estado atual" do design system.** A tabela diz que os tokens, os
       componentes da F01 e as bibliotecas (Radix, CVA, Sonner) existem no código; o repositório
       atual ainda tem o esqueleto do Next. Corrigir a tabela nesta funcionalidade? Não trava o
       código; evita retrabalho e confusão.
+- [ ] **11. Gaveta do Rail e da Sidebar abaixo de `md`.** O design system descreve a gaveta aberta
+      pelo IconButton "Abrir navegação", mas a F01-T08 entrega só a casca de desktop, porque a
+      tarefa não a lista e a F01-T02 não criou `IconButton` nem `Dialog`. A gaveta precisa de uma
+      tarefa própria da casca, com o primitivo e o teste; o produto é de navegador de desktop e
+      celular e tablet estão fora de escopo no PRD. Não trava o código da F01.
