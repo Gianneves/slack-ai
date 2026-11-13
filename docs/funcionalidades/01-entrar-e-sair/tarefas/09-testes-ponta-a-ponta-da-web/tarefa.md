@@ -1,6 +1,6 @@
 # F01 — T09 — Testes de ponta a ponta da web
 
-Status: a fazer
+Status: em andamento
 
 - **Funcionalidade:** F01 — Entrar e sair
 - **Spec:** [spec.md](../../spec.md)

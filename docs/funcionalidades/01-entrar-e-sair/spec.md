@@ -121,7 +121,7 @@ não os repete.
 | `src/config/env.ts` | planejada | schema zod das variáveis da web |
 | `src/proxy.ts` | planejada | conferência da existência do cookie (Next 16 chama o antigo middleware de proxy) |
 | `e2e/` e `playwright.config.ts` | planejada | testes de ponta a ponta, Chromium headless e axe, com a skill `playwright-cli` na escrita e na depuração |
-| `package.json` | existe | `zod`, `lucide-react`, `radix-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`, `@playwright/test` e `@axe-core/playwright` |
+| `package.json` | existe | `zod`, `lucide-react`, `radix-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`, `@playwright/test`, `@axe-core/playwright`, `pg` e `@types/pg` |
 | `AGENTS.md` | existe | comandos de e2e e o uso da skill `playwright-cli` |
 | `compose.yaml` (raiz) | existe | serviço `e2e` com `profile`, como o LLD, seção 10, planeja |
 
@@ -345,7 +345,9 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
 - A falha de verificação (rede, 5xx ou tempo esgotado) acontece no servidor do BFF, fora do
   alcance do roteamento do Playwright; ela fica num roteiro manual, com o `chat-api` parado e a
   web no ar.
-- A criação e a revogação de Pessoas nos testes dependem da questão em aberto 4.
+- A criação e a revogação de Pessoas nos testes usam o comando de contas da tarefa 04, executado
+  dentro do contêiner `e2e`; a Sessão vencida e a limpeza por prefixo usam `pg`, como a questão 4
+  decidiu.
 
 ### Manual
 
@@ -381,8 +383,11 @@ da API (corpo de erro, `Retry-After`, renovação condicional) sem repetir o cam
       Sessões da Pessoa identificada pelo e-mail normalizado. O comando de operação conhece o
       e-mail, não o token, e a revogação por Pessoa corta o acesso de quem perdeu a conta; a
       decisão vale para a tarefa 04 e o roteiro manual.
-- [ ] **4. Como o Playwright cria e revoga Pessoas.** Rodar a operação do comando de contas dentro
-      do contêiner `e2e`, ou usar SQL e um hash pronto? Trava a tarefa 09.
+- [x] **4. Como o Playwright cria e revoga Pessoas.** Resolvida: a criação e a revogação usam o
+      comando de contas da tarefa 04, executado no contêiner `e2e` sobre o `dist` do `chat-api`
+      construído no `globalSetup` da suíte. O `pg` entra como dependência de teste só para o que
+      nenhuma operação expõe: montar a Sessão vencida e apagar as linhas `e2e-…@teste.local` de
+      `sessions`, `login_attempts` e `people` por prefixo. A decisão vale para a tarefa 09.
 - [ ] **5. Dono do snapshot OpenAPI.** O LLD diz que o snapshot é o dono do contrato, mas ele não
       existe. A infraestrutura do `@nestjs/swagger` entra nesta funcionalidade ou numa tarefa de
       contrato separada? Trava o dono do contrato, não o código da F01.
